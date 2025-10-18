@@ -481,7 +481,6 @@ author:
             </fieldset>
             </div>
         </div>
-
         <fieldset><legend>フォント・ファミリ</legend>
             <table>
                 <tr><td>見出し</td><td><input name="heading-font-family" type="" placeholder="'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif" value=""></td></tr>
@@ -489,6 +488,19 @@ author:
             </table>
         </fieldset>
 
+        <div name="footer-contents">
+            <h3>フッタ設定</h3>
+            <label><input name="isShowTime" type="checkbox">全画面時時刻表示</label>
+            <label><input name="isShowChapterTitle" type="checkbox">章題表示</label>
+            <select name="nombreType">
+                <option value="now-all">現在ページ数／全ページ数</option>
+                <option value="remain">残りページ数</option>
+                <option value="rate">読了率</option>
+                <option value="now">現在ページ数</option>
+            </select>
+            <label>読了率の少数<input name="digits" type="number" min="0" max="3" value="0">桁</label>
+            <label><input name="isShowWorkTitle" type="checkbox">題名表示</label>
+        </div>
         <!--
         <input name="fontSize" type="number" min="8" max="14" step="0.5" value="12">pt(<span name="fontSizePx"></span>px)　<span name="lineOfChars"></span>字/行
         <button name="make">面付けする</button>(押下後に出現した画面で右クリックし『印刷する』)
