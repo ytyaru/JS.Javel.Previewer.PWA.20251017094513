@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="monochrome-512.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.921875"
+     inkscape:cx="321.62712"
+     inkscape:cy="233.76271"
+     inkscape:window-width="1920"
+     inkscape:window-height="1022"
+     inkscape:window-x="0"
+     inkscape:window-y="36"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <style
+     id="style2">.paper {fill: #fff;}.frame {fill: #000; stroke: #000;}.hollow {stroke: #000;}circle {fill: #f00;}@media (prefers-color-scheme: dark) {.paper {fill: #000;}.frame {fill: #fff; stroke: #fff;}.hollow {stroke: #fff;}circle {fill: #0f0;}}</style>
+  <circle
+     cx="256"
+     cy="256"
+     r="80"
+     style="opacity:1;fill-opacity:1;stroke:#000;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="circle6" />
+  <path
+     class="hollow"
+     d="M257.195 95.739v318.986"
+     style="stroke-width:32;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     id="path8" />
+  <path
+     class="frame"
+     d="M0 75v362h232.334l22.816-22.037v-1.64l.85.82.85-.82v1.64L279.666 437H512V75H278.691L256.85 96.096c.003.844.19 2.09-.754.947-.76.462-1.142.844-.932-.363-.264-1.499-2.073-2.256-2.975-3.444L233.31 75zm46.246 46.246h419.508v269.508H46.246z"
+     style="color:currentColor;stroke-linecap:square;-inkscape-stroke:none"
+     id="path10" />
+</svg>

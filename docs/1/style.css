@@ -1,0 +1,65 @@
+@charset "utf-8";
+:root {
+    --page-inline-size: 640px;
+    --page-block-size: 480px;
+/*    --column-width: 1;*/
+    --column-count: auto;
+    --column-gap: 2em;
+    --column-fill: auto; /* auto:前段から詰める, balance:前後の段を均等に埋める */
+    --writing-mode: horizontal-tb; /*vertical-rl*/
+    --text-orientation: mixed; /*upright*/
+    --writing-mode: vertical-rl; /*horizontal-tb*/
+    --text-orientation: upright; /*mixed*/
+    --font-size: 16px;
+    --line-height: 1.7em;
+    --letter-spacing: 0.05em;
+    --em-style: sesame;
+    --em-color: currentColor;
+}
+img.icon {
+    width: 1em;
+    height: 1em;
+}
+footer {
+    text-align:center;
+}
+body {
+    /*font-size:max(16px, calc(100vw / 45));*/
+    font-size: calc(100vw / (var(--line-of-chars)));
+    line-height:1.7em;
+    letter-spacing:0.05em;
+    color:#000;
+    background-color:#ddd;
+    font-family: 'Noto Serif JP', 'Source Han Serif JP', 'Noto Color Emoji', serif; 
+    padding:0; margin:0;
+}
+h1,h2,h3,h4,h5,h6,th,label,caption,legend,code { font-family: 'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif; }
+.page *:first-child {margin-block-start:0;}
+.page *:last-child {margin-block-end:0;}
+em {
+    font-style: normal;
+    text-emphasis: var(--em-style) var(--em-color);
+    -webkit-text-emphasis: var(--em-style) var(--em-color);
+}
+.page {
+    display: none;
+    inline-size: var(--page-inline-size);
+    block-size: var(--page-block-size);
+    /*column-width: var(--column-width);*/
+    column-count: var(--column-count);
+    column-gap: var(--column-gap);
+    column-fill: var(--column-fill);
+    writing-mode: var(--writing-mode);
+    text-orientation: var(--text-orientation);
+    font-size: var(--font-size);
+    line-height: var(--line-height);
+    letter-spacing: var(--letter-spacing);
+    box-sizing: border-box;
+    /*padding-block-end:16px;*/ /* footer分の余白 */
+}
+.page.show {display: block;}
+/*.page.dummy {display: block;}*/
+.page.spread { /* 見開きページ */
+    column-count: 1;
+}
+button[name="install"] {width:100%; height:100%;}
