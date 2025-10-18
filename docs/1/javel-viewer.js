@@ -19,8 +19,12 @@ class JavelViewer {
 //        height: window.innerHeight,
         height: document.documentElement.clientHeight,
         writingMode: 'vertical-rl',
+        lineOfChars: 40,
+        minFontSize: 16,
         columnCount: null,
         columnGap: Css.getFloat('--column-gap') ?? null,
+        lineHeight: 1.7,
+        letterSpacing: 0.05,
     } }
     #setOptions(options) {
         console.log('#setOptions() options:', options);
@@ -32,7 +36,11 @@ class JavelViewer {
         if (!Number.isFinite(O.width)) {O.width=document.body.clientWidth}
         if (!Number.isFinite(O.height)) {O.height=window.innerHeight}//document.documentElement.clientHeight（横スクロールバーの高さも含まれるが表示しないため無問題）
         if (!this.#isValidWritingMode(O.writingMode)) {O.writingMode='vertical-rl';}
+        if (!Number.isFinite(O.lineOfChars) || (O.lineOfChars < 25 || 50 < O.lineOfChars)) {O.lineOfChars=40}
+        if (!Number.isFinite(O.minFontSize) || (O.minFontSize < 8 || 32 < O.minFontSize)) {O.minFontSize=16}
         if (![1,2].some(v=>v===O.columnCount)) {O.columnCount=null}
+        if (!Number.isFinite(O.lineHeight) || (O.lineHeight < 0 || 1 < O.lineHeight)) {O.lineHeight=1.7}
+        if (!Number.isFinite(O.letterSpacing) || (O.letterSpacing < 0 || 1 < O.letterSpacing)) {O.letterSpacing=0.05}
 //        Css.set('writing-mode', 'var(--writing-mode)', this._.viewer);
         Css.set('--writing-mode', O.writingMode);
         this._.O = O;
@@ -147,17 +155,22 @@ name: 著者名
         //Css.set(`--column-count`, `2`);
         Css.set(`--column-count`, `${columnCount}`);
         console.log('columnCount:', columnCount, 'inline:', inlineSize, 'block:', blockSize, 'mode:', this._.O.writingMode);
-        const inlineChars = ((40 + (40*Css.getFloat('--letter-spacing'))) * columnCount) + Css.getFloat('--column-gap');
-        const inlineFtSz = Math.max(16, inlineSize/inlineChars);
+        //const inlineChars = ((40 + (40*Css.getFloat('--letter-spacing'))) * columnCount) + Css.getFloat('--column-gap');
+        //const inlineChars = ((this._.O.lineOfChars + (this._.O.lineOfChars*Css.getFloat('--letter-spacing'))) * columnCount) + Css.getFloat('--column-gap');
+        const inlineChars = ((this._.O.lineOfChars + ((this._.O.lineOfChars*this._.O.letterSpacing) * columnCount)) + (1===columnCount ? 0 : this._.O.columnGap/columnCount));
+        //const inlineChars = this._.O.lineOfChars;
+        //const inlineFtSz = Math.max(16, inlineSize/inlineChars);
+        const inlineFtSz = Math.max(this._.O.minFontSize, inlineSize/inlineChars);
         Css.set(`--font-size`, `${inlineFtSz}px`);
-        console.log('font-size:', inlineFtSz);
+        console.log('font-size:', inlineFtSz, this._.O.minFontSize, inlineSize/inlineChars, inlineSize, inlineChars, this._.O.lineOfChars);
         //Math.max(16, inlineSize/(40+(1===columnCount ? 0 : Css.getFloat('--column-gap'))+(40*Css.getFloat('--letter-spacing'))));
-
         //if (!Number.isFinite(O.columnGap)) {O.columnGap=}
         const columnGapEm = Number.isFinite(this._.O.columnGap) ? this._.O.columnGap : 2;
         Css.set(`--column-gap`, `${columnGapEm}em`);
         const columnGapPx = inlineFtSz*columnGapEm;
 
+        Css.set(`--line-height`, `${this._.O.lineHeight}em`);
+        Css.set(`--letter-spacing`, `${this._.O.letterSpacing}em`);
         /*
         this._.O.viewer.style.width = `${this._.O.width}px`;
         this._.O.viewer.style.height = `${this._.O.height}px`;

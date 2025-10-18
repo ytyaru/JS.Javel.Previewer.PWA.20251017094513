@@ -87,6 +87,7 @@
     [name="setting"] {display:block;box-sizing:border-box;padding:0; margin:0;}
     /*[name="setting"] > div {width:100%; height:100%;}*/
     [name="setting"] > div {box-sizing:border-box; width:100%; height:100%;}
+    [name="typography"] > fieldset {display:flex;flex-direction:column;gap:0em;}
     @media screen and (min-width: 960px) {
 /*        [name="setting"] {display:flex;flex-direction:row;justify-content:flex-start;align-items:start;list-style:none;box-sizing:border-box;padding:0; margin:0; height:100%;}
         [name="manuscript-section"] {width:100%;height:100%;}
@@ -97,6 +98,7 @@
         /*
         textarea {box-sizing:border-box;padding:0; margin:0;width:100%;height:100%;resize:none;}
         */
+        [name="typography"] > fieldset {display:flex;flex-direction:row;gap:1em;}
     }
   </style>
 </head>
@@ -163,14 +165,16 @@
 </header>
 <main>
     <div name="input">
-    <button name="view">閲覧する</button><label><input name="isDnDView" type="checkbox" checked>原稿ファイルがDnDされたら自動的に閲覧する</label>
+    <button name="view">閲覧する</button>
     <div name="setting">
     <div name="manuscript-section">
         <h2>原稿</h2>
         <input name="url" type="text" placeholder="URL"><!--<label><input name="isRemakeURL" type="checkbox" checked>入力ファイルやテキストに応じて自動生成する</label>-->
         <br>
         <input name="file" type="file"><br>
-        <span>原稿ファイルをドラッグ＆ドロップしても入力できます。</span><br>
+        <label><input name="isDnDView" type="checkbox" checked>原稿ファイルがDnDされたら自動的に閲覧する</label>
+        <!--<span>原稿ファイルをドラッグ＆ドロップしても入力できます。</span>-->
+        <br>
         <!--<textarea name="manuscript" style="box-sizing:border-box;width:100%;height:100%;">-->
         <textarea name="manuscript">
 ---
@@ -462,14 +466,18 @@ author:
         <div name="typography">
             <div style="display:flex;align-items:center;"><h3>タイポグラフィ</h3><label><input name="isAutoTypography" type="checkbox" checked>おまかせ</label><br></div>
             <div style="display:flex;align-items:center;">
+            <fieldset><legend>サイズ</legend>
+                <div>最低<input name="minFontSize" type="number" min="8" max="32" value="16">px／字</div>
+                <div>最長<input name="lineOfChars" type="number" min="25" max="50" value="40">字／行</div>
+            </fieldset>
             <fieldset><legend>段組み</legend>
-                <input name="columnCount" type="number" min="1" max="2" value="1">段
-                <input name="columnGap" type="number" min="0" max="4" value="2" step="0.5">em間隔
+                <div><input name="columnCount" type="number" min="1" max="2" value="1">段</div>
+                <div><input name="columnGap" type="number" min="0" max="4" value="2" step="0.5">em間隔</div>
             </fieldset>
             <fieldset><legend>余白</legend>
                 <!--<input name="lineOfChars" type="number" min="25" max="50">字／行-->
-                <input name="letterSpacing" type="number" min="0" max="0.2" step="0.01" value="0.05">em字間
-                <input name="lineHeight" type="number" min="1" max="1.8" step="0.05" value="1.7">em行間
+                <div><input name="lineHeight" type="number" min="1" max="1.8" step="0.05" value="1.7">em行間</div>
+                <div><input name="letterSpacing" type="number" min="0" max="0.2" step="0.01" value="0.05">em字間</div>
             </fieldset>
             </div>
         </div>
