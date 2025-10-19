@@ -25,7 +25,6 @@ class PageFooter {
     resetContent() {// ページ遷移時に現在ページ数と章タイトルを変更する
         const page = this._.viewer.querySelector('.page.show:not(dummy)');
         console.log(page.dataset.page, page);
-        //this._.el.querySelector(`[name="footer"]`).style.display = (page.classList.contains('spread')) ? 'none' : 'flex';//見開きページならフッタ非表示
         this._.el.style.display = (page.classList.contains('spread')) ? 'none' : 'flex';//見開きページならフッタ非表示
         this.#updateSubTitle(page);
         this.nowPage = parseInt(page.dataset.page);
@@ -114,11 +113,9 @@ class PageFooter {
                 ),
                 Dom.tags.div({name:'last', style:`inline-size:33.33%;margin-inline-end:0;text-align:right;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`}, 
                     Dom.tags.div({name:'title', style:`margin-inline-end:0;text-align:right;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`}, '作品名'),
-                    //Dom.tags.div({name:'title', style:`margin-inline-end:0;text-align:right;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`}, '作品名０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９'),
                 ),
             );
             viewer.appendChild(f); return f;
-//            this._.O.viewer.appendChild(f); return f;
         }
     }
     #place(viewer, calc) {// フッタ配置（本文が横書き二段ならフッタは縦書き中央に配置する等。H1=下部H, H2=中央V, V1=下部H, V2=中央H）
@@ -132,7 +129,6 @@ class PageFooter {
             console.log('footer:', r);
             this._.el.style.position = 'absolute';
             this._.el.style.top = `${calc.isVertical ? (calc.height/2)-(16/2)+(calc.columnGap.px/2) : 0}px`;
-            //this._.el.style.left = `${calc.isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(16/2)-(calc.columnGap.px/2)}px`;
             this._.el.style.left = `${calc.isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(16/2)}px`;
             this._.el.style.width = `${calc.isVertical ? calc.width : 16}px`;
             this._.el.style.height = `${calc.isVertical ? 16 : calc.height}px`;

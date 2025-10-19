@@ -215,7 +215,7 @@ name: 著者名
 //        footer.style.display = 'flex';
         // ノンブルを表示する（未実装）
 //        this._.O.viewer.querySelector('[name="loading-all-page"]').textContent = `${this._.O.viewer.querySelector(`[data-page]:last-child`).dataset.page}`;
-        this._.O.viewer.querySelector('[name="loading-all-page"]').textContent = `${book.querySelector(`[data-page]:last-child`).dataset.page}`;
+//        this._.O.viewer.querySelector('[name="loading-all-page"]').textContent = `${book.querySelector(`[data-page]:last-child`).dataset.page}`;
         //this._.O.viewer.querySelector('.page:not(.dummy)').classList.add('show');
         book.querySelector('.page:not(.dummy)').classList.add('show');
         this._.O.viewer.querySelector(`[name="footer"] [name="allPage"]`).textContent = this._.O.viewer.querySelector('[name="loading-all-page"]').textContent;
@@ -225,28 +225,11 @@ name: 著者名
         this._.footer.nowPage = 0;
         this.#listen();
         this._.O.viewer.focus();
-        /*
-        const res = await fetch('asset/javel/intro.jv');
-        const txt = await res.text();
-        Dom.q(`[name="demo-edit"]`).value = txt;
-        parser.manuscript = txt;
-        for await (let page of splitter.generateAsync()) {
-            Dom.q(`[name="demo-view"]`).appendChild(page);
-        }
-        Dom.q(`[name="demo-view"] *.page:not(.dummy)`).classList.add('show');
-        this._.viewer.width = Css.getFloat('width', Dom.q('[name="demo-view"]'));
-        this._.viewer.height = Css.getFloat('height', Dom.q('[name="demo-view"]'));
-        //this._.viewer.writingMode = Css.get('writing-mode', Dom.q('[name="demo-view"]'));
-        this.#listen();
-        Dom.q(`[name="demo-view"]`).focus();
-        */
     }
     #listen() {
         console.log('listen()');
-        //Dom.q(`[name="demo-view"]`).listen('click', async(e)=>{
         this._.O.viewer.addEventListener('click', async(e)=>{
             if (!this._.loaded) {return}
-//            const nowPage = Dom.q(`[name="demo-view"] *.page.show:not(.dummy)`);
             const nowPage = this._.O.viewer.querySelector('.page.show:not(.dummy)');
             console.log(nowPage)
             if (this.#isHorizontal) {
@@ -258,13 +241,10 @@ name: 著者名
             }
             console.log(this.#isHorizontal, this.#isClickLeft(e.clientX), this._.O.viewer.width, this._.O.viewer.height);
         });
-//        Dom.q(`[name="demo-view"]`).setAttribute('tabindex', '0');
-//        Dom.q(`[name="demo-view"]`).addEventListener('keyup', async(e)=>{
         this._.O.viewer.setAttribute('tabindex', '0');
         this._.O.viewer.addEventListener('keyup', async(e)=>{
             console.log('keyup:', e);
             if (!this._.loaded) {return}
-            //const nowPage = Dom.q(`[name="demo-view"] *.page.show:not(.dummy)`);
             const nowPage = this._.O.viewer.querySelector('.page.show:not(.dummy)');
             if (e.shiftKey) {
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#prevPage(nowPage);}
@@ -279,12 +259,6 @@ name: 著者名
         });
     }
     #isValidWritingMode(v) {return ['horizontal-tb', 'vertical-rl'].some(n=>n===v)}
-    /*
-    get #isHorizontal() {return this._.viewer.writingMode.startsWith('h')}
-    get #isVertical() {return this._.viewer.writingMode.startsWith('v')}
-    #isClickLeft(x, y) {return x < (this._.viewer.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
-    #isClickRight(x, y) {return (this._.viewer.width / 2) <= x}//画面を左右に二分割したとき左半分をクリックしたか
-    */
     get #isHorizontal() {return this._.O.writingMode.startsWith('h')}
     get #isVertical() {return this._.O.writingMode.startsWith('v')}
     #isClickLeft(x, y) {return x < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
@@ -298,11 +272,6 @@ name: 著者名
                 nowPage.nextElementSibling.classList.add('show');
                 nowPage.classList.remove('show');
                 this._.footer.resetContent();
-                /*
-//                this._.O.viewer.querySelector(`[name="footer"]`).style.visiblity = (nowPage.nextElementSibling.classList.containts('spread')) ? 'hidden' : 'visible';
-                this._.O.viewer.querySelector(`[name="footer"]`).style.display = (nowPage.nextElementSibling.classList.contains('spread')) ? 'none' : 'flex';
-                this._.O.viewer.querySelector(`[name="footer"] [name="nowPage"]`).textContent = nowPage.nextElementSibling.dataset.page;
-                */
             }
         //} else {this.#prevPage(nowPage)} // 最期のページで次に進もうとしても前に戻る
         } // 最期のページで次に進もうとしても何もしない
@@ -311,17 +280,11 @@ name: 著者名
         if (nowPage.previousElementSibling) {
             if (this.#isSelection) {return}
             console.log('前に戻る', nowPage);
-            //if (!nowPage.previousElementSibling.classList.contains('page')) {return}// 最初のページで前に戻ろうとしてもerrorやloadingは表示しない
             if (!nowPage.previousElementSibling.classList.contains('page') || nowPage.previousElementSibling.classList.contains('dummy')) {this.#nextPage(nowPage)}// 最初のページで前に戻ろうとしても次に進む
             else {
                 nowPage.previousElementSibling.classList.add('show');
                 nowPage.classList.remove('show');
                 this._.footer.resetContent();
-                /*
-//                this._.O.viewer.querySelector(`[name="footer"]`).style.visiblity = (nowPage.nextElementSibling.classList.containts('spread')) ? 'hidden' : 'visible';
-                this._.O.viewer.querySelector(`[name="footer"]`).style.display = (nowPage.previousElementSibling.classList.contains('spread')) ? 'none' : 'flex';
-                this._.O.viewer.querySelector(`[name="footer"] [name="nowPage"]`).textContent = nowPage.previousElementSibling.dataset.page;
-                */
             }
         } else {this.#nextPage(nowPage)} // 最初のページで前に戻ろうとしても次に進む
         //} // 最初のページで前に戻ろうとしても何もしない
