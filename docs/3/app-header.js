@@ -10,9 +10,13 @@ class AppHeader {
                 policy: Dom.q(`[name="app-policy"]`),
             },
             display: {
-                status: Dom.q(`[name="app-status"]`).style.display,
-                feature: Dom.q(`[name="app-feature"]`).style.display,
-                policy: Dom.q(`[name="app-policy"]`).style.display,
+                status: 'flex',
+                feature: 'block',
+                policy: 'block',
+//                status: Dom.q(`[name="app-status"]`).style.display,
+//                feature: Dom.q(`[name="app-feature"]`).style.display,
+//                policy: Dom.q(`[name="app-policy"]`).style.display,
+
             }
         };
         this.#setup();

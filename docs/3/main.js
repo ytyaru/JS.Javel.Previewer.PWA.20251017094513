@@ -10,8 +10,10 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     const parser = new JavelParser();
     const splitter = new PageSplitter(parser);
     const viewer = new JavelViewer();
+    appHeader.hide();
     appHeader.resizeTextarea();
     Dom.q(`[name="view"]`).addEventListener('click', async(e) => {
+        Dom.q(`[name="review"]`).style.display = 'inline';
         //appHeader.hide();
         Dom.q(`[name="appHeader"]`).style.display = 'none';
         Dom.q(`[name="input"]`).style.display = 'none';
@@ -45,8 +47,24 @@ window.addEventListener('DOMContentLoaded', async(event) => {
                 isShowRemain: Dom.q(`[name="isShowRemain"]`).checked,
                 isShowPercent: Dom.q(`[name="isShowPercent"]`).checked,
             },
+            onClosed: ()=>{//閲覧から戻る
+                Dom.q(`[name="book"]`).style.display = 'none';
+                Dom.q(`[name="appHeader"]`).style.display = 'block';
+                Dom.q(`[name="input"]`).style.display = 'block';
+                Dom.q(`[name="review"]`).focus();
+            },
         });
         viewEl.focus();
+    });
+    Dom.q(`[name="review"]`).addEventListener('click', async(e) => {//再び開く
+        Dom.q(`[name="appHeader"]`).style.display = 'none';
+        Dom.q(`[name="input"]`).style.display = 'none';
+        const viewEl = Dom.q(`[name="book"]`)
+        viewEl.style.display = 'block';
+//        await wait(50);
+//        viewer._.loaded = false;
+        viewEl.focus();
+//        viewer._.loaded = true;
     });
     Dom.q(`[name="size"]`).addEventListener('input', async(e) => {
         console.log('****************', e.target.value, e);
@@ -65,6 +83,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     Dom.q(`[name="size"]`).dispatchEvent(new Event('input'));
 //    Dom.q(`[name="width"]`).value = document.body.clientWidth;
 //    Dom.q(`[name="height"]`).value = document.documentElement.clientHeight;
+    Dom.q(`[name="view"]`).focus();
 });
 window.addEventListener('beforeunload', (event) => {
     console.log('beforeunload!!');

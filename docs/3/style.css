@@ -15,6 +15,8 @@
     --letter-spacing: 0.05em;
     --em-style: sesame;
     --em-color: currentColor;
+    --bg-color: #ddd;
+    --fg-color: #000;
 }
 img.icon {
     width: 1em;
@@ -28,8 +30,12 @@ body {
     /*font-size: calc(100vw / (var(--line-of-chars)));*/
     line-height:1.7em;
     letter-spacing:0.05em;
+    /*
     color:#000;
     background-color:#ddd;
+    */
+    color: var(--fg-color);
+    background-color: var(--bg-color);
     font-family: 'Noto Serif JP', 'Source Han Serif JP', 'Noto Color Emoji', serif; 
     padding:0; margin:0;
 }

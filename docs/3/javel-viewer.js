@@ -1,7 +1,7 @@
 (function(){
 class JavelViewer {
     constructor() {
-        this._ = {loaded:false}
+        this._ = {loaded:false, listened:false}
         this._.parser = new JavelParser();
         this._.splitter = new PageSplitter(this._.parser);
         this._.footer = new PageFooter();
@@ -26,6 +26,7 @@ class JavelViewer {
         columnGap: Css.getFloat('--column-gap') ?? null,
         lineHeight: 1.7,
         letterSpacing: 0.05,
+        onClosed: ()=>{},
     } }
     #setOptions(options) {
         console.log('#setOptions() options:', options);
@@ -48,13 +49,26 @@ class JavelViewer {
         console.log('設定:', O, !O.javel && (Type.isEl(O.editor) && !!O.editor.value));
     }
     #makeLoading() {
-        if (!this._.O.viewer.querySelector('[name="loading"]')) {
-            this._.O.viewer.append(Dom.tags.div({name:'loading', style:'display:none;'}, 
+        //if (!this._.O.viewer.querySelector('[name="loading"]')) {
+        if (!Dom.q('[name="loading"]')) {
+            Dom.q(`[name="overlay"]`).append(
+                Dom.tags.div({name:'loading', style:'display:none; font-size:1.25em; color:var(--fg-color); background-color:var(--bg-color); border:8px ridge var(--fg-color);'}, 
+                    Dom.tags.span({name:'loading-rate'}, '0'),
+                    '　', Dom.tags.span({name:'loading-all-page'}), 'ページ', 
+                    Dom.tags.br(),
+                    Dom.tags.span({name:'loading-message'}, '読込中……しばしお待ち下さい'),
+                ),
+            );
+            /*
+            //this._.O.viewer.append(Dom.tags.div({name:'loading', style:'display:none;'}, 
+//            this._.O.viewer.append(Dom.tags.div({name:'loading', style:'display:none; position:fixed; top:0; left:0; width:100%;  height:100%; z-index:999; display:flex; justify-content:center; align-items:center;'}, 
                 Dom.tags.span({name:'loading-rate'}, '0'),
                 '　', Dom.tags.span({name:'loading-all-page'}), 'ページ', 
                 Dom.tags.br(), Dom.tags.span({name:'loading-message'}, '読込中……しばしお待ち下さい'),
             ));
+            */
         }
+        Dom.q('[name="loading"]').display = 'none';
     }
     async #load() {
         if (!this._.O.viewer.querySelector('[name="error"]')) {
@@ -94,7 +108,8 @@ name: 著者名
         const book = this._.O.viewer.querySelector(`[name="book-in-pages"]`);
         console.log('#makeBookDiv():', book);
         if (book) {book.innerHTML = ''; return book;}
-        else {const b = Dom.tags.div({name:'book', style:';display:block;padding:0;margin:0;box-sizing:border-box;', 'data-all-page':0});this._.O.viewer.appendChild(b); return b;}
+        //else {const b = Dom.tags.div({name:'book', style:';display:block;padding:0;margin:0;box-sizing:border-box;', 'data-all-page':0});this._.O.viewer.appendChild(b); return b;}
+        else {const b = Dom.tags.div({name:'book-in-pages', style:';display:block;padding:0;margin:0;box-sizing:border-box;', 'data-all-page':0});this._.O.viewer.appendChild(b); return b;}
     }
     #isOverSilverRatio(inlineSize, blockSize) {// inlineSizeが白銀比1:√2(1.414)の長辺かそれ以上か
         const isLongInline = blockSize < inlineSize;
@@ -146,25 +161,33 @@ name: 著者名
         console.log('JavelViewer#setup() writingMode:', Css.get('--writing-mode'), Css.get('--page-inline-size'), Css.get('--page-block-size'), this.#isVertical, this._.O.width, this._.O.height);
         this.#makeLoading();
         await this.#load();
-        this._.O.viewer.querySelector('[name="loading"]').style.display = 'block';
+        //this._.O.viewer.querySelector('[name="loading"]').style.display = 'block';
+        Dom.q('[name="loading"]').style.display = 'block';
         const book = this.#makeBookDiv();
-        this._.footer.make(book, calc, this._.O.footer);
+        //this._.footer.make(book, calc, this._.O.footer);
+        this._.footer.make(this._.O.viewer, calc, this._.O.footer);
+        this._.O.viewer.style.display = 'block';
         for await (let page of this._.splitter.generateAsync(this._.O.viewer)) {
             console.log('ページ数:',page.dataset.page)
             book.appendChild(page);
-            this._.O.viewer.querySelector('[name="loading-all-page"]').textContent = page.dataset.page;
-            this._.O.viewer.querySelector('[name="loading-rate"]').textContent = `${this._.parser.body.progress.rate.toFixed(100===this._.parser.body.progress.rate ? 0 : 1)}%`;
+            Dom.q('[name="loading-all-page"]').textContent = page.dataset.page;
+            Dom.q('[name="loading-rate"]').textContent = `${this._.parser.body.progress.rate.toFixed(100===this._.parser.body.progress.rate ? 0 : 1)}%`;
+//            this._.O.viewer.querySelector('[name="loading-all-page"]').textContent = page.dataset.page;
+//            this._.O.viewer.querySelector('[name="loading-rate"]').textContent = `${this._.parser.body.progress.rate.toFixed(100===this._.parser.body.progress.rate ? 0 : 1)}%`;
         }
-        this._.O.viewer.appendChild(this._.footer.el); // 末尾に移動する
-        this._.O.viewer.querySelector('[name="loading"]').style.display = 'none';
+//        this._.O.viewer.appendChild(this._.footer.el); // 末尾に移動する
+        //this._.O.viewer.querySelector('[name="loading"]').style.display = 'none';
+        Dom.q('[name="loading"]').style.display = 'none';
         book.querySelector('.page:not(.dummy)').classList.add('show');
         // ノンブルを表示する（未実装）
 //        this._.O.viewer.querySelector(`[name="footer"] [name="allPage"]`).textContent = this._.O.viewer.querySelector('[name="loading-all-page"]').textContent;
         this._.footer.title = this._.parser.meta.javel.title;
         this._.footer.subTitle = '';
-        this._.footer.allPage = parseInt(this._.O.viewer.querySelector('[name="loading-all-page"]').textContent);
+        //this._.footer.allPage = parseInt(this._.O.viewer.querySelector('[name="loading-all-page"]').textContent);
+        this._.footer.allPage = parseInt(Dom.q('[name="loading-all-page"]').textContent);
         this._.footer.nowPage = 0;
-        this.#listen();
+        //this.#listen();
+        if (!this._.listened) {this.#listen();this._.listened=true;}
         this._.O.viewer.focus();
     }
     #listen() {
@@ -191,7 +214,7 @@ name: 著者名
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#prevPage(nowPage);}
             } else {
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#nextPage(nowPage);}
-                else if ('Escape'===e.key) {} // 設定画面表示
+                else if ('Escape'===e.key) {if(this._.loaded){this._.O.onClosed();}} // 設定画面表示
                 else if ('ArrowLeft'===e.key) {this.#isHorizontal ? this.#prevPage(nowPage) : this.#nextPage(nowPage);}
                 else if ('ArrowRight'===e.key) {this.#isHorizontal ? this.#nextPage(nowPage) : this.#prevPage(nowPage);}
                 else if ('n'===e.key) {this.#nextPage(nowPage)}

@@ -104,13 +104,16 @@
   </style>
 </head>
 <body>
+<div name="overlay" style="display:none; pointer-events:none; position:fixed; top:0; left:0; width:100%;  height:100%; z-index:999; display:flex; justify-content:center; align-items:center;'"></div>
+<!--
+-->
 <header name="appHeader">
     <div style="display:flex;justify-content:flex-start;gap:1em;align-items:center;padding:0;margin:0;">
         <h1 name="app-name" tabindex="0" style="cursor:pointer;padding:0;margin:0;">Javel Viewer</h1>
         <div>
             <div><p name="app-catch" tabindex="0" style="cursor:pointer;padding:0;margin:0;">テキストを小説にするアプリ</p></div>
             <hr class="separator">
-            <div name="app-status" style="display:flex;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;list-style:none;">
+            <div name="app-status" style="display:none;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;list-style:none;">
                 <div class="tip-card">PWA</div>
                 <div class="tip-card">1.0.0</div>
                 <div class="tip-card">AGPL</div>
@@ -120,7 +123,7 @@
         <a href="" target="_blank" rel="noopener noreferer" target="github"><i><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-github"></use></svg></i></a>
     </div>
     <div name="aboutScreen">
-        <div name="app-feature" style="padding:0; margin:0; line-height:1.5em;">
+        <div name="app-feature" style="display:none;padding:0; margin:0; line-height:1.5em;">
             <div class="status-card-box" style="display:inline-block; padding:0; margin:0;">
                 <ul class="status-card-header">
                     <li><i><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-page"></use></svg></i><div style="display:flex; flex-direction:column;"><div style="flex:1;">ページ分割</div><hr style="margin:0;border:none;height:1px;background-color:currentColor;" class="separator"><div style="flex:1;"><ruby style="ruby-position:under;padding:0;margin:0;line-height:1em;"><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-pc"></use></svg><rt style="padding:0;margin:0;line-height:1em;">PC</rt></ruby><ruby style="ruby-position:under;padding:0;margin:0;line-height:1em;"><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-smart-phone"></use></svg><rt style="padding:0;margin:0;line-height:1em;">スマホ</rt></ruby></div></div></li>
@@ -141,7 +144,7 @@
                 </div>
             </div>
         </div>
-        <div name="app-policy" style="padding:0; margin:0; line-height:1.5em;">
+        <div name="app-policy" style="display:none;padding:0; margin:0; line-height:1.5em;">
             <div class="status-card-box" style="display:inline-block; padding:0; margin:0;">
                 <ul class="status-card-header" style="border:1px solid currentColor; border-radius:1em 1em 0 0;">
                     <li><i><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-contribution"></use></svg></i><div style="display:flex; flex-direction:column;"><div style="flex:1;">公益追求</div><hr style="margin:0;border:none;height:1px;background-color:currentColor;" class="separator"><div style="flex:1;">私益排除</div></div></li>
@@ -167,6 +170,7 @@
 <main>
     <div name="input">
     <button name="view">閲覧する</button>
+    <button name="review" style="display:none;">再び開く</button>
     <div name="setting">
     <div name="manuscript-section">
         <h2>原稿</h2>

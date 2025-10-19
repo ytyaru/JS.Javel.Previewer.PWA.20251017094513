@@ -81,7 +81,8 @@ class PageFooter {
     get #isFullScreen() {return window.screen.height===window.outerHeight && window.screen.width===window.outerWidth}
     #makeEl(viewer) {
         const footer = viewer.querySelector(`[name="footer"]`);
-        if (footer) {footer.style.display = 'none'; footer.innerHTML = ''; return footer;}
+        //if (footer) {footer.style.display = 'none'; footer.innerHTML = ''; return footer;}
+        if (footer) {footer.style.display = 'none'; return footer;}
         else {
 //            return Dom.tags.div({name:'footer', style:'display:none;justify-content:space-between;padding:0;margin:0;box-sizing:border-box;font-family:monoscape;font-size:16px;line-height:1em;'},
             const f = Dom.tags.div({name:'footer', style:'display:none;justify-content:space-between;padding:0;margin:0;box-sizing:border-box;font-family:monoscape;font-size:16px;line-height:1em;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'},
