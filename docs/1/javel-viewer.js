@@ -4,6 +4,7 @@ class JavelViewer {
         this._ = {loaded:false}
         this._.parser = new JavelParser();
         this._.splitter = new PageSplitter(this._.parser);
+        this._.footer = new PageFooter();
     }
     async make(options) {
         this._.loaded = false;
@@ -184,6 +185,7 @@ name: 著者名
 //        this._.O.editor.style.blockSize = `${blockSize + 16}px`;
 //        this._.O.editor.style.inlineSize = `${inlineSize}px`;
         return {
+            isVertical: this.#isVertical,
             width: W, height: H,
             inlineSize: inlineSize,
             blockSize: blockSize,
@@ -218,74 +220,7 @@ name: 著者名
         //this._.O.viewer.querySelector('[name="error"]').style.display = 'none';
         this._.O.viewer.querySelector('[name="loading"]').style.display = 'block';
         const book = this.#makeBookDiv();
-        const footer = this.#makeFooter(book, calc);
-        console.log('***************************:', this.#isVertical, this._.O)
-        // フッタ配置（本文が横書き二段ならフッタは縦書き中央に配置する等。H1=下部H, H2=中央V, V1=下部H, V2=中央H）
-        //if (2===this._.O.columnCount) {
-        if (2===calc.columnCount) {
-            footer.style.writingMode = this.#isVertical ? 'horizontal-tb' : 'vertical-rl';
-            footer.style.textOrientation = this.#isVertical ? 'mixed' : 'upright';
-            this._.O.viewer.style.position = 'relative';
-            footer.style.display = 'flex';
-            const r = footer.getBoundingClientRect();
-            footer.style.display = 'none';
-            console.log('footer:', r);
-            /*
-            footer.style.position = 'absolute';
-            footer.style.top = `${this.#isVertical ? (calc.height/2)-(16/2)+(calc.columnGap/2) : ((calc.height/2)-(r.height/2))}px`;
-            footer.style.left = `${this.#isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(16/2)+(calc.columnGap/2)}px`;
-            */
-            footer.style.position = 'absolute';
-            footer.style.top = `${this.#isVertical ? (calc.height/2)-(16/2)+(calc.columnGap.px/2) : 0}px`;
-            //footer.style.left = `${this.#isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(16/2)-(calc.columnGap.px/2)}px`;
-            footer.style.left = `${this.#isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(16/2)}px`;
-            footer.style.width = `${this.#isVertical ? calc.width : 16}px`;
-            footer.style.height = `${this.#isVertical ? 16 : calc.height}px`;
-//            footer.style.inlineSize = `${calc.inlineSize}px`;
-//            footer.style.blockSize = `16px`;
-//            alert(`${r.width}, ${footer.style.left}, ${(calc.width/2)}, ${(footer.width/2)}, ${Css.getFloat('width',footer)}, ${getComputedStyle(footer).getPropertyValue('width') }`);
-            /*
-            footer.style.top = `${this.#isVertical ? (calc.height/2)-(16/2)+(calc.columnGap/2) : ((calc.height/2)-(Css.getFloat('height',footer)/2))}px`;
-            footer.style.left = `${this.#isVertical ? ((calc.width/2)-(Css.getFloat('width',footer)/2)) : (calc.width/2)-(16/2)+(calc.columnGap/2)}px`;
-            alert(`${footer.style.left}, ${(calc.width/2)}, ${(footer.width/2)}, ${Css.getFloat('width',footer)}, ${getComputedStyle(footer).getPropertyValue('width') }`);
-            */
-            //footer.style.top = `${this.#isVertical ? (calc.height/2)-(16/2)+(calc.columnGap/2) : 0}px`;
-            //footer.style.left = `${this.#isVertical ? 0 : (calc.width/2)-(16/2)+(calc.columnGap/2)}px`;
-            
-            /*
-            footer.style.position = 'flexed';
-            footer.style.top = '50%';
-            footer.style.left = '50%';
-            footer.style.transform = 'translate(-50%, -50%)';
-            */
-        } else {
-            footer.style.writingMode = 'horizontal-tb';
-            footer.style.textOrientation = 'mixed';
-            this._.O.viewer.style.position = null;
-            footer.style.position = null;
-            footer.style.top = null;
-            footer.style.left = null;
-            footer.style.transform = null;
-            footer.style.width = `${calc.width}px`;
-            footer.style.height = `16px`;
-        }
-        footer.style.zIndex = '10';
-        /*
-        book.style.position = (2===this._.O.columnCount ? 'relative' : null);
-        footer.style.position = (1===this._.O.columnCount ? 'sticky' : null);
-        if (1===this._.O.columnCount) {
-            footer.style.bottom = '0';
-            book.style.display = 'block';
-            book.style.justifyContent = null;
-            book.style.alignItems = null;
-        }
-        else {
-            footer.style.bottom = null;
-            this._.O.viewer.style.display = 'flex';
-            this._.O.viewer.style.justifyContent = 'center';
-            this._.O.viewer.style.alignItems = 'center';
-        }
-        */
+        this._.footer.make(book, calc, {});
 //        footer.style.bottom = (2===this._.O.columnCount ? '0' : '0');
         //for await (let page of this._.splitter.generateAsync()) {
         for await (let page of this._.splitter.generateAsync(this._.O.viewer)) {
@@ -299,6 +234,7 @@ name: 著者名
             this._.O.viewer.querySelector('[name="loading-rate"]').textContent = `${this._.parser.body.progress.rate.toFixed(100===this._.parser.body.progress.rate ? 0 : 1)}%`;
             */
         }
+        this._.O.viewer.appendChild(this._.footer.el); // 末尾に移動する
         this._.O.viewer.querySelector('[name="loading"]').style.display = 'none';
 //        footer.style.visibility = 'hidden';
 //        footer.style.display = 'flex';
