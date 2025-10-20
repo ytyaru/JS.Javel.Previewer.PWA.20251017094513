@@ -17,6 +17,12 @@
     --em-color: currentColor;
     --bg-color: #ddd;
     --fg-color: #000;
+    --a-link: initial;
+    --a-visited: initial;
+    --a-hover: initial;
+    --a-active: initial;
+    --selection-bg: initial;
+    --selection-fg: initial;
 }
 img.icon {
     width: 1em;
@@ -39,6 +45,14 @@ body {
     font-family: 'Noto Serif JP', 'Source Han Serif JP', 'Noto Color Emoji', serif; 
     padding:0; margin:0;
 }
+button, input, input::file-selector-button, input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button, select, textarea {
+    color: var(--fg-color);
+    background-color: var(--bg-color);
+}
+a:link{color:var(--a-link);}
+a:visited{color:var(--a-visited);}
+a:hover{color:var(--a-hover);}
+a:active{color:var(--a-active);}
 h1,h2,h3,h4,h5,h6,th,label,caption,legend,code { font-family: 'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif; }
 .page *:first-child {margin-block-start:0;}
 .page *:last-child {margin-block-end:0;}

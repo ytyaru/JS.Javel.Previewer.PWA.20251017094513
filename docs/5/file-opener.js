@@ -8,7 +8,7 @@ class FileOpener {
         document.addEventListener('dragover', async(event)=>{event.preventDefault(); event.dataTransfer.dropEffect = "copy";});
         document.addEventListener('drop', async(event)=>{
             event.preventDefault();
-            this.#action(await event.dataTransfer.files[0].text());
+            if (0 < event.dataTransfer.files.length) {this.#action(await event.dataTransfer.files[0].text());}
         });
         // URL
         Dom.q(`[name="url"]`).addEventListener('change', async(e) => {

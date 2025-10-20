@@ -5,6 +5,7 @@ if ('serviceWorker' in navigator) {navigator.serviceWorker.register('sw.js').the
 );} else {console.error("Service workers are not supported.");}
 window.addEventListener('DOMContentLoaded', async(event) => {
     console.log('DOMContentLoaded!!');
+    const colorScheme = new ColorScheme();
     const installButton = new InstallButton();
     const appHeader = new AppHeader();
     const fileOpener = new FileOpener();
