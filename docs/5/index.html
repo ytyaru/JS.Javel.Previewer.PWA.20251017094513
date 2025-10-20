@@ -29,6 +29,7 @@
   <script src="lib/util/string/length.js"></script>
   <script src="lib/util/promise/wait.js"></script>
   <script src="lib/util/event/listener.js"></script>
+  <script src="polyfill.js"></script>
   <script src="parser.js"></script>
   <script src="page-splitter.js"></script>
   <!--
@@ -36,8 +37,10 @@
   -->
   <script src="install-button.js"></script>
   <script src="app-header.js"></script>
+  <script src="file-opener.js"></script>
   <script src="page-footer.js"></script>
   <script src="javel-viewer.js"></script>
+
   <!--<script src="demo.js"></script>-->
   <script src="main.js"></script>
   <style>
@@ -177,7 +180,8 @@
         <input name="url" type="text" placeholder="URL"><!--<label><input name="isRemakeURL" type="checkbox" checked>入力ファイルやテキストに応じて自動生成する</label>-->
         <br>
         <input name="file" type="file"><br>
-        <label><input name="isDnDView" type="checkbox" checked>原稿ファイルがDnDされたら自動的に閲覧する</label>
+        <!--<label><input name="isDnDView" type="checkbox" checked>原稿ファイルがDnDされたら自動的に閲覧する</label>-->
+        <label><input name="isImmediatelyView" type="checkbox" checked>原稿ファイルを開いたりDnDしたりURL指定したらすぐ閲覧する</label>
         <!--<span>原稿ファイルをドラッグ＆ドロップしても入力できます。</span>-->
         <br>
         <!--<textarea name="manuscript" style="box-sizing:border-box;width:100%;height:100%;">-->

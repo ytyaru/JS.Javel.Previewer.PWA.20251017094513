@@ -165,6 +165,7 @@ name: 著者名
         Dom.q('[name="loading"]').style.display = 'block';
 
         // 表紙
+        if (this._.O.viewer.querySelector('.cover')) {this._.O.viewer.querySelector('.cover').remove();}
         this._.O.viewer.appendChild(this._.splitter.makeCover());
         this._.O.viewer.querySelector('.cover').classList.add('show');
 
@@ -185,6 +186,7 @@ name: 著者名
 //            this._.O.viewer.querySelector('[name="loading-rate"]').textContent = `${this._.parser.body.progress.rate.toFixed(100===this._.parser.body.progress.rate ? 0 : 1)}%`;
         }
         // 裏表紙
+        if (this._.O.viewer.querySelector('.back-cover')) {this._.O.viewer.querySelector('.back-cover').remove();}
         this._.O.viewer.appendChild(this._.splitter.makeBackCover());
 //        this._.O.viewer.appendChild(this._.footer.el); // 末尾に移動する
         //this._.O.viewer.querySelector('[name="loading"]').style.display = 'none';

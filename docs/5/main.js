@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     console.log('DOMContentLoaded!!');
     const installButton = new InstallButton();
     const appHeader = new AppHeader();
+    const fileOpener = new FileOpener();
     const parser = new JavelParser();
     const splitter = new PageSplitter(parser);
     const viewer = new JavelViewer();
@@ -20,7 +21,8 @@ window.addEventListener('DOMContentLoaded', async(event) => {
         const isAuto = Dom.q(`[name="isAutoTypography"]`).checked;
         const viewEl = Dom.q(`[name="book"]`);
         await viewer.make({
-            javel: 'asset/javel/intro.jv',
+//            javel: 'asset/javel/intro.jv',
+            javel: Dom.q(`[name="manuscript"]`).value,
             viewer: viewEl, 
 //            editor: Dom.q(`[name="demo-edit"]`), 
             writingMode: Dom.q(`[name="writingMode"]`).value, 
@@ -83,6 +85,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     Dom.q(`[name="size"]`).dispatchEvent(new Event('input'));
 //    Dom.q(`[name="width"]`).value = document.body.clientWidth;
 //    Dom.q(`[name="height"]`).value = document.documentElement.clientHeight;
+
     Dom.q(`[name="view"]`).focus();
 });
 window.addEventListener('beforeunload', (event) => {
