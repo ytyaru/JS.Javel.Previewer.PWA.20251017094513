@@ -26,6 +26,7 @@ class JavelViewer {
         columnGap: Css.getFloat('--column-gap') ?? null,
         lineHeight: 1.7,
         letterSpacing: 0.05,
+        isFullScreen: false,
         onClosed: ()=>{},
     } }
     #setOptions(options) {
@@ -161,6 +162,7 @@ name: 著者名
         }
     }
     async #setup() {
+        if (this._.O.isFullScreen && screenfull.enabled) {screenfull.request(document.documentElement, {navigationUI: 'hide'});}
         const calc = this.#setSize();
         console.log('calc:', calc);
         console.log('JavelViewer#setup() writingMode:', Css.get('--writing-mode'), Css.get('--page-inline-size'), Css.get('--page-block-size'), this.#isVertical, this._.O.width, this._.O.height);
