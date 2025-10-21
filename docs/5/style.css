@@ -2,6 +2,7 @@
 :root {
     --page-inline-size: 640px;
     --page-block-size: 480px;
+    --page-padding-bottom: 0px;
 /*    --column-width: 1;*/
     --column-count: auto;
     --column-gap: 2em;
@@ -76,6 +77,7 @@ em {
     letter-spacing: var(--letter-spacing);
     box-sizing: border-box;
     /*padding-block-end:16px;*/ /* footer分の余白 */
+    padding-bottom: var(--page-padding-bottom); /* columnCount=1時, 2時gap部分 */
 }
 .page.show {display: block;}
 /*.page.dummy {display: block;}*/

@@ -123,7 +123,12 @@ name: 著者名
         let blockSize = this.#isVertical ? W : H;
         // inlineSizeが1040px以上で、かつ長辺であり縦横比が本と同じ1:√2(1.414)の長辺と同じかそれ以上ならcolumnCountを2にする。
         const columnCount = this._.O.columnCount ? this._.O.columnCount : (1040 < inlineSize && this.#isOverSilverRatio(inlineSize, blockSize) ? 2 : 1);
-        H -= (1===columnCount ? 16 : 0); // -16はfooter
+
+        // サイズはそのままで余白にする。そしてその余白部分にオーバーレイする
+//        H -= (1===columnCount ? 16 : 0); // -16はfooter
+        Css.set('--page-padding-bottom', `${1===columnCount ? 16 : 0}px`);
+        
+
         inlineSize = this.#isVertical ? H : W;
         blockSize = this.#isVertical ? W : H;
         const columnWidth = 1===columnCount ? inlineSize : inlineSize + Css.getFloat('--column-gap')

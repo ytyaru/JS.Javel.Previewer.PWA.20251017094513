@@ -116,22 +116,31 @@ class PageFooter {
         }
     }
     #place(viewer, calc) {// フッタ配置（本文が横書き二段ならフッタは縦書き中央に配置する等。H1=下部H, H2=中央V, V1=下部H, V2=中央H）
-        if (2===calc.columnCount) {
+        const H = 16; // フッタの高さ／幅
+        viewer.style.position = 'relative';
+        this._.el.style.position = 'absolute';
+        if (2===calc.columnCount) {// 画面中央
             this._.el.style.writingMode = calc.isVertical ? 'horizontal-tb' : 'vertical-rl';
             this._.el.style.textOrientation = calc.isVertical ? 'mixed' : 'upright';
-            viewer.style.position = 'relative';
+//            viewer.style.position = 'relative';
             this._.el.style.display = 'flex';
             const r = this._.el.getBoundingClientRect();
             this._.el.style.display = 'none';
             console.log('footer:', r);
-            this._.el.style.position = 'absolute';
-            this._.el.style.top = `${calc.isVertical ? (calc.height/2)-(16/2)+(calc.columnGap.px/2) : 0}px`;
-            this._.el.style.left = `${calc.isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(16/2)}px`;
-            this._.el.style.width = `${calc.isVertical ? calc.width : 16}px`;
-            this._.el.style.height = `${calc.isVertical ? 16 : calc.height}px`;
-        } else {
+//            this._.el.style.position = 'absolute';
+            this._.el.style.top = `${calc.isVertical ? (calc.height/2)-(H/2)+(calc.columnGap.px/2) : 0}px`;
+            this._.el.style.left = `${calc.isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(H/2)}px`;
+            this._.el.style.width = `${calc.isVertical ? calc.width : H}px`;
+            this._.el.style.height = `${calc.isVertical ? H : calc.height}px`;
+        } else {// 画面下部
             this._.el.style.writingMode = 'horizontal-tb';
             this._.el.style.textOrientation = 'mixed';
+//            this._.el.style.position = 'absolute';
+            this._.el.style.top = `${calc.height-H}px`;
+            this._.el.style.left = `0px`;
+            this._.el.style.width = `${calc.width}px`;
+            this._.el.style.height = `${H}px`;
+            /*
             viewer.style.position = null;
             this._.el.style.position = null;
             this._.el.style.top = null;
@@ -139,6 +148,7 @@ class PageFooter {
             this._.el.style.transform = null;
             this._.el.style.width = `${calc.width}px`;
             this._.el.style.height = `16px`;
+            */
         }
         this._.el.style.zIndex = '10';
     }
