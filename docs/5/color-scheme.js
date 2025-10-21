@@ -53,7 +53,10 @@ class ColorScheme {
         Object.keys(this._.scheme[N].selection).map(v=>Css.set(`--selection-${v}`, this._.scheme[N].selection[v]));
     }
     #listen() {
-        this._.el.addEventListener('click', async(event)=>{this.toggle();});
+        this._.el.addEventListener('click', async(e)=>{this.toggle();});
+        this._.el.addEventListener('keyup', async(e)=>{
+            if ([' ', 'Enter'].some(v=>v===e.key)) {e.preventDefault(); this.toggle();}
+        });
     }
 }
 window.ColorScheme = ColorScheme;

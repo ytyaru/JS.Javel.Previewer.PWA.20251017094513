@@ -18,8 +18,13 @@
   <link rel="icon" href="asset/image/icon/javel/512/any.svg">
   <link rel="icon" rel="apple-touch-icon" href="asset/image/icon/javel/180/any.png" />
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="/lib/sanitize.css/13.0.0/full/sanitize.css">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="lib/micromodal/0.6.1/basic.css">
+
   <script src="lib/js-yaml/4.1.0/min.js"></script>
+  <script src="lib/micromodal/0.6.1/min.js"></script>
+
   <script src="lib/util/type.js"></script>
   <script src="lib/util/string/normalize-line-breaks.js"></script>
   <script src="lib/util/string/trim.js"></script>
@@ -30,6 +35,8 @@
   <script src="lib/util/promise/wait.js"></script>
   <script src="lib/util/event/listener.js"></script>
   <script src="polyfill.js"></script>
+
+  <script src="focus-looper.js"></script>
   <script src="parser.js"></script>
   <script src="page-splitter.js"></script>
   <!--
@@ -41,76 +48,29 @@
   <script src="file-opener.js"></script>
   <script src="page-footer.js"></script>
   <script src="javel-viewer.js"></script>
-
-  <!--<script src="demo.js"></script>-->
   <script src="main.js"></script>
-  <style>
-  .status-card {
-    display:flex;justify-content:flex-start;align-items:baseline;list-style:none;
-    padding:0; margin:0;
-  }
-  .status-card-header {
-    display:flex;flex-wrap: wrap;justify-content:flex-start;align-items:baseline;list-style:none;
-    padding:0; margin:0;
-  }
-  .status-card-header > li > a {display:block;}
-  .status-card-header > li i {font-style:normal; font-size:2em; padding:0; margin:0;}
-  .status-card-header > li {
-    display:flex;justify-content:flex-start;align-items:center;list-style:none;
-    font-family: 'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif;
-    font-size: 1em;
-    padding-inline-start: 0;
-    border: 1px solid currentColor;
-    border-radius: 0.5em;
-    margin:0;
-  }
-  hr.separator {margin:0;border:none;height:1px;background-color:currentColor;}
-  .tip-card {display:flex; justify-content:center; align-items:center; border:1px solid currentColor; box-sizing:border-box; font-family:monoscape; line-height:1em; padding:0 0.25em 0 0.25em; margin:0;}
-
-    /* 640未満,640以上 */
-  [name="demo"] {display:flex;justify-content:flex-start;align-items:center;list-style:none;box-sizing:border-box;padding:0; margin:0;}
-  [name="demo"] > div, [name="demo"] > textarea {flex-basis:100%; height:auto; aspect-ratio:16/9;box-sizing:border-box;}/* 640px 以下 に適用される*/
-  @media screen and (min-width: 640px) {[name="demo"] > div, [name="demo"] > textarea {flex-basis:calc(100% / 2); height:auto; aspect-ratio:16/9;}}/* 640px以上に適用されるCSS（タブレット用） */
-    /* 640未満,640以上,960以上 */
-    /*
-  [name="demo"] {display:flex;justify-content:flex-start;align-items:center;list-style:none;}
-  [name="demo"] > div, [name="demo"] > textarea {flex-basis: 100%;}
-  @media screen and (min-width: 640px) {[name="demo"] > div, [name="demo"] > textarea {flex-basis: calc(100% / 2);}}
-  @media screen and (min-width: 960px) {[name="demo"] > div, [name="demo"] > textarea {flex-basis: calc(100% / 3);}}
-  */
-    [name="demo-view"], [name="demo-edit"] {
-        display:block;
-        box-sizing:border-box;
-        padding:0; margin:0;
-    }
-    /* height:auto; aspect-ratio:16/9;*/
-    /*html,body,textarea{height:100%;}*/
-
-    div {box-sizing:border-box; padding:0; margin:0;}
-    textarea {box-sizing:border-box;padding:0; margin:0;width:100%;height:120px;resize:none;}
-
-    [name="setting"] {display:block;box-sizing:border-box;padding:0; margin:0;}
-    /*[name="setting"] > div {width:100%; height:100%;}*/
-    [name="setting"] > div {box-sizing:border-box; width:100%; height:100%;}
-    [name="typography"] > fieldset {display:flex;flex-direction:column;gap:0em;}
-    @media screen and (min-width: 960px) {
-/*        [name="setting"] {display:flex;flex-direction:row;justify-content:flex-start;align-items:start;list-style:none;box-sizing:border-box;padding:0; margin:0; height:100%;}
-        [name="manuscript-section"] {width:100%;height:100%;}
-*/
-        [name="setting"] {display:flex;flex-direction:row;justify-content:flex-start;align-items:start;list-style:none;box-sizing:border-box;padding:0; margin:0; height:100%;}
-        [name="setting"] > div, [name="setting"] > textarea {flex-basis:calc(100% / 2); height:auto; aspect-ratio:16/9;}
-        /*textarea {box-sizing:border-box;padding:0; margin:0;width:100%;height:100%;resize:none;}*/
-        /*
-        textarea {box-sizing:border-box;padding:0; margin:0;width:100%;height:100%;resize:none;}
-        */
-        [name="typography"] > fieldset {display:flex;flex-direction:row;gap:1em;}
-    }
-  </style>
 </head>
 <body>
+
+
+<!-- 
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+  <div class="modal-overlay" tabindex="-1" data-micromodal-close>
+    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <header class="modal-header">
+        <h2 class="modal-title" id="modal-1-title">Micromodal</h2>
+        <button class="modal-close" aria-label="Close modal" data-micromodal-close>❌</button>
+      </header>
+      <div class="modal-content" id="modal-1-content">Modal Content</div>
+    </div>
+  </div>
+</div>
+<button data-micromodal-trigger="modal-1" class="modal-open">open</button>
+-->  
+
+
+
 <div name="overlay" style="display:none; pointer-events:none; position:fixed; top:0; left:0; width:100%;  height:100%; z-index:999; display:flex; justify-content:center; align-items:center;'"></div>
-<!--
--->
 <header name="appHeader">
     <div style="display:flex;justify-content:flex-start;gap:1em;align-items:center;padding:0;margin:0;">
         <h1 name="app-name" tabindex="0" style="cursor:pointer;padding:0;margin:0;">Javel Viewer</h1>
@@ -125,10 +85,7 @@
             </div>
         </div>
         <a href="" target="_blank" rel="noopener noreferer" target="github"><i><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-github"></use></svg></i></a>
-        <!--
-        <svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-dark"></use></svg>
-        <svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-light"></use></svg>
-        -->
+        <!-- ここにライト／ダークボタンが動的追加される -->
     </div>
     <div name="aboutScreen">
         <div name="app-feature" style="display:none;padding:0; margin:0; line-height:1.5em;">
@@ -172,8 +129,7 @@
                 </div>
             </div>
         </div>
-
-
+    </div>
 </header>
 <main>
     <div name="input">
@@ -467,31 +423,35 @@ author:
     </div>
     <!--<div name="config">-->
     <div name="page-config-section">
+        <div style="display:flex;align-items:center;"><h2>ページ設定</h2><label><label><input name="isPrioritizeManuscript" type="checkbox" checked>原稿ファイルの設定を優先</label></div>
+        
+        <!--
         <h2>ページ設定</h2>
+        <label><input name="isPrioritizeManuscript" type="checkbox" checked>原稿にページ設定があればそちらを優先する</label><br>
+        -->
+        <select name="writingMode"><option value="vertical-rl">縦書き</option><option value="horizontal-tb">横書き</option></select>
         <select name="size">
             <option value="window">今のウインドウ</option>
             <option value="full">全画面化</option>
             <option value="fix">指定サイズ</option>
-        </select><span>に合わせる</span>
-        <label><input name="isPrioritizeManuscript" type="checkbox" checked>原稿にページ設定があればそちらを優先する</label><br>
+        </select><label>に合わせる</label>
         <input name="width" type="number" min="320" max="99999">x<input name="height" type="number" min="240" max="99999">
-        <select name="writingMode"><option value="vertical-rl">縦書き</option><option value="horizontal-tb">横書き</option></select>
 
         <div name="typography">
             <div style="display:flex;align-items:center;"><h3>タイポグラフィ</h3><label><input name="isAutoTypography" type="checkbox" checked>おまかせ</label><br></div>
             <div style="display:flex;align-items:center;">
             <fieldset><legend>サイズ</legend>
-                <div>最低<input name="minFontSize" type="number" min="8" max="32" value="16">px／字</div>
-                <div>最長<input name="lineOfChars" type="number" min="25" max="50" value="40">字／行</div>
+                <div><label>最低</label><input name="minFontSize" type="number" min="8" max="32" value="16"><label>px/字</label></div>
+                <div><label>最長</label><input name="lineOfChars" type="number" min="25" max="50" value="40"><label>字/行</label></div>
             </fieldset>
             <fieldset><legend>段組み</legend>
-                <div><input name="columnCount" type="number" min="1" max="2" value="1">段</div>
-                <div><input name="columnGap" type="number" min="0" max="4" value="2" step="0.5">em間隔</div>
+                <div><input name="columnCount" type="number" min="1" max="2" value="1"><label>段</label></div>
+                <div><input name="columnGap" type="number" min="0" max="4" value="2" step="0.5"><label>em間隔</label></div>
             </fieldset>
             <fieldset><legend>余白</legend>
                 <!--<input name="lineOfChars" type="number" min="25" max="50">字／行-->
-                <div><input name="lineHeight" type="number" min="1" max="1.8" step="0.05" value="1.7">em行間</div>
-                <div><input name="letterSpacing" type="number" min="0" max="0.2" step="0.01" value="0.05">em字間</div>
+                <div><input name="lineHeight" type="number" min="1" max="1.8" step="0.05" value="1.7"><label>em行間</label></div>
+                <div><input name="letterSpacing" type="number" min="0" max="0.2" step="0.01" value="0.05"><label>em字間</label></div>
             </fieldset>
             </div>
         </div>

@@ -25,22 +25,11 @@
     --selection-bg: initial;
     --selection-fg: initial;
 }
-img.icon {
-    width: 1em;
-    height: 1em;
-}
-footer {
-    text-align:center;
-}
+img.icon {width:1em; height:1em;}
+footer {text-align:center;}
 body {
-    /*font-size:max(16px, calc(100vw / 45));*/
-    /*font-size: calc(100vw / (var(--line-of-chars)));*/
     line-height:1.7em;
     letter-spacing:0.05em;
-    /*
-    color:#000;
-    background-color:#ddd;
-    */
     color: var(--fg-color);
     background-color: var(--bg-color);
     font-family: 'Noto Serif JP', 'Source Han Serif JP', 'Noto Color Emoji', serif; 
@@ -76,12 +65,36 @@ em {
     line-height: var(--line-height);
     letter-spacing: var(--letter-spacing);
     box-sizing: border-box;
-    /*padding-block-end:16px;*/ /* footer分の余白 */
     padding-bottom: var(--page-padding-bottom); /* columnCount=1時, 2時gap部分 */
 }
 .page.show {display: block;}
-/*.page.dummy {display: block;}*/
-.page.spread { /* 見開きページ */
-    column-count: 1;
-}
+.page.spread {column-count:1;} /* 見開きページ */
 button[name="install"] {width:100%; height:100%;}
+.status-card-header {
+    display:flex;flex-wrap: wrap;justify-content:flex-start;align-items:baseline;list-style:none;
+    padding:0; margin:0;
+}
+.status-card-header > li > a {display:block;}
+.status-card-header > li i {font-style:normal; font-size:2em; padding:0; margin:0;}
+.status-card-header > li {
+    display:flex;justify-content:flex-start;align-items:center;list-style:none;
+    font-family: 'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif;
+    font-size: 1em;
+    padding-inline-start: 0;
+    border: 1px solid currentColor;
+    border-radius: 0.5em;
+    margin:0;
+}
+hr.separator {margin:0;border:none;height:1px;background-color:currentColor;}
+.tip-card {display:flex; justify-content:center; align-items:center; border:1px solid currentColor; box-sizing:border-box; font-family:monoscape; line-height:1em; padding:0 0.25em 0 0.25em; margin:0;}
+div {box-sizing:border-box; padding:0; margin:0;}
+textarea {box-sizing:border-box;padding:0; margin:0;width:100%;height:120px;resize:none;}
+[name="setting"] {display:block;box-sizing:border-box;padding:0; margin:0;}
+[name="setting"] > div {box-sizing:border-box; width:100%; height:100%;}
+[name="typography"] > fieldset {display:flex;flex-direction:column;gap:0em;}
+@media screen and (min-width: 960px) {
+    [name="setting"] {display:flex;flex-direction:row;justify-content:flex-start;align-items:start;list-style:none;box-sizing:border-box;padding:0; margin:0; height:100%;}
+    [name="setting"] > div, [name="setting"] > textarea {flex-basis:calc(100% / 2); height:auto; aspect-ratio:16/9;}
+    [name="typography"] > fieldset {display:flex;flex-direction:row;gap:1em;}
+}
+
