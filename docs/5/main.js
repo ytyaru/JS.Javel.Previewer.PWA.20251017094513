@@ -7,6 +7,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     console.log('DOMContentLoaded!!');
     MicroModal.init();
     focusLooper.setup();
+
     const colorScheme = new ColorScheme();
     const installButton = new InstallButton();
     const appHeader = new AppHeader();
@@ -17,7 +18,8 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     appHeader.hide();
     appHeader.resizeTextarea();
     Dom.q(`[name="view"]`).addEventListener('click', async(e) => {
-        if (screenfull.enabled) {screenfull.request(document.documentElement, {navigationUI: 'hide'});}
+        // セキュリティの事情で効かない
+//        if (screenfull.enabled) {screenfull.request(document.documentElement, {navigationUI: 'hide'});}
         /*
         if (screenfull.enabled) {
             if ('full'===Dom.q(`[name="size"]`).value){screenfull.request(document.documentElement, {navigationUI: 'hide'});}
@@ -46,7 +48,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
             columnGap: isAuto ? null : Number(Dom.q(`[name="columnGap"]`).value),
             lineHeight: Number(Dom.q(`[name="lineHeight"]`).value),
             letterSpacing: Number(Dom.q(`[name="letterSpacing"]`).value),
-            isFullScreen: 'full'===Dom.q(`[name="size"]`).value,
+//            isFullScreen: 'full'===Dom.q(`[name="size"]`).value,
 //            width: Css.getInt('width', Dom.q(`[name="demo-edit"]`)), 
 //            height: Css.getInt('height', Dom.q(`[name="demo-edit"]`)),
 //            columnCount: 2,
@@ -83,14 +85,16 @@ window.addEventListener('DOMContentLoaded', async(event) => {
         viewEl.focus();
 //        viewer._.loaded = true;
     });
-
     Dom.q(`[name="fullscreen"]`).addEventListener('click', async(e) => {
         console.log('CCCCCCCCCCCCCCCC');
+        if (screenfull.enabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement, {navigationUI: 'hide'});}
+        /*
         if (screenfull.enabled) {screenfull.request(document.documentElement, {navigationUI: 'hide'});return;}
         //if ('full'===e.value && screenfull.enabled) {document.documentElement.requestFullscreen();}
 //        if ('full'===e.value && screenfull.enabled) {screenfull.request(document.querySelector('main'), {navigationUI: 'hide'});}
 //        else {if (screenfull.isFullscreen){screenfull.exit()}}
         if (screenfull.isFullscreen){screenfull.exit()}
+        */
     });
     /*
     */
@@ -118,6 +122,10 @@ window.addEventListener('DOMContentLoaded', async(event) => {
 //    Dom.q(`[name="width"]`).value = document.body.clientWidth;
 //    Dom.q(`[name="height"]`).value = document.documentElement.clientHeight;
     Dom.q(`[name="isAutoTypography"]`).addEventListener('input', async(e) => {'size column whitespace'.split(' ').map(n=>Dom.q(`[name="${n}-field"]`).disabled=e.target.checked);});//おまかせ
+
+
+    // 初期化
+    Dom.q(`[name="fullscreen"]`).innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面';
     Dom.q(`[name="view"]`).focus();
 });
 window.addEventListener('beforeunload', (event) => {

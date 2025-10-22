@@ -1,0 +1,79 @@
+/* --- ★★★ 簡単カスタマイズエリア ★★★ --- */
+:root {
+    --book-width: 400px;
+    --book-height: 600px;
+    --page-bg-color: #fdfdfd;
+    --page-text-color: #333;
+    --flip-duration: 1s; /* めくれる速さ */
+}
+/* -------------------------------------- */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: sans-serif;
+}
+
+/* 本のコンテナ（3D空間の基点） */
+.book-container {
+    width: var(--book-width);
+    height: var(--book-height);
+    position: relative;
+    perspective: 1500px; /* 遠近感の強さ */
+}
+
+/* 各ページの共通スタイル */
+.page {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: left center; /* ページの左端を軸に回転 */
+    transform-style: preserve-3d;
+    transition: transform var(--flip-duration) ease-in-out;
+}
+
+/* ページの表面と裏面 */
+.page-front,
+.page-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--page-bg-color);
+    color: var(--page-text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    backface-visibility: hidden; /* ★重要：要素の裏側を非表示に */
+    border: 1px solid #ccc;
+}
+.page-back {
+    transform: rotateY(180deg); /* 裏面は最初から裏返しておく */
+}
+
+/* JSによってこのクラスが付くと、ページが回転する */
+.page.flipped {
+    transform: rotateY(-180deg);
+}
+
+/* ナビゲーションボタン */
+.navigation {
+    margin-top: 20px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}

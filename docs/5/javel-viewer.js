@@ -5,6 +5,7 @@ class JavelViewer {
         this._.parser = new JavelParser();
         this._.splitter = new PageSplitter(this._.parser);
         this._.footer = new PageFooter();
+        this._.hammer = new Hammer(Dom.q(`[name="book"]`));
     }
     async make(options) {
         this._.loaded = false;
@@ -26,7 +27,7 @@ class JavelViewer {
         columnGap: Css.getFloat('--column-gap') ?? null,
         lineHeight: 1.7,
         letterSpacing: 0.05,
-        isFullScreen: false,
+//        isFullScreen: false,
         onClosed: ()=>{},
     } }
     #setOptions(options) {
@@ -162,7 +163,7 @@ name: 著者名
         }
     }
     async #setup() {
-        if (this._.O.isFullScreen && screenfull.enabled) {screenfull.request(document.documentElement, {navigationUI: 'hide'});}
+//        if (this._.O.isFullScreen && screenfull.enabled) {screenfull.request(document.documentElement, {navigationUI: 'hide'});}
         const calc = this.#setSize();
         console.log('calc:', calc);
         console.log('JavelViewer#setup() writingMode:', Css.get('--writing-mode'), Css.get('--page-inline-size'), Css.get('--page-block-size'), this.#isVertical, this._.O.width, this._.O.height);
@@ -206,35 +207,119 @@ name: 著者名
         //this._.footer.allPage = parseInt(this._.O.viewer.querySelector('[name="loading-all-page"]').textContent);
         this._.footer.allPage = parseInt(Dom.q('[name="loading-all-page"]').textContent);
         this._.footer.nowPage = 0;
+
+        // イベント設定（イベントのターゲットHTML要素は変わらない想定。もし変わったらバグる）
+//        if (this._.hammer) {this._.hammer.destroy();}
+//        this._.hammer = new Hammer(this._.O.viewer);
 //        this.#listen();
         if (!this._.listened) {this.#listen();this._.listened=true;}
         this._.O.viewer.focus();
     }
     #listen() {
         console.log('listen()');
+        //delete Hammer.defaults.cssProps.userSelect;
+        Hammer.defaults.cssProps.userSelect = 'text'; // テキスト選択できないので、選択可にしたら、今度はスワイプできなくなった。よってスワイプでなくタップで遷移する。new Hammer()の前に設定する必要がある。あとから変更不可（反映されない）
+        this._.hammer = new Hammer(this._.O.viewer);
+        /*
+        this._.hammer.on('swipeleft', async(e)=>{
+            console.log('SWIPE-L:', e);
+            if (!this._.loaded) {return}
+            if (this.#isHorizontal) {this.#nextPage(this.#nowPage)}
+            else {this.#prevPage(this.#nowPage)}
+        });
+        this._.hammer.on('swiperight', async(e)=>{
+            console.log('SWIPE-R:', e);
+            if (!this._.loaded) {return}
+            if (this.#isHorizontal) {this.#prevPage(this.#nowPage)}
+            else {this.#nextPage(this.#nowPage)}
+        });
+        */
+        this._.hammer.get('press').set({ time:3000 }); // 3秒長押し
+        this._.hammer.on('press', async(e)=>{
+            console.log('PRESS:', e);
+            if(this._.loaded){this._.O.onClosed();}
+        });
+
+        /*
+//        const hammer = new Hammer.Manager(element);
+        // ダブルタップ認識器を作成（2回タップ）
+        const doubleTapRecognizer = new Hammer.Tap({event:'doubletap', taps:2});
+        // シングルタップ認識器を作成（1回タップ）
+        const singleTapRecognizer = new Hammer.Tap({event: 'singletap'});
+        // 認識器をHammerインスタンスに追加
+        hammer.add([doubleTapRecognizer, singleTapRecognizer]);
+        // シングルタップはダブルタップが失敗した場合にのみ認識されるように設定
+        singleTapRecognizer.requireFailure(doubleTapRecognizer);
+        // イベントリスナーを設定
+        this._.hammer.on('singletap', async(e)=>{
+            console.log('シングルタップが認識されました！', e);
+            if (!this._.loaded) {return}
+            console.log(this.#nowPage)
+            if (this.#isHorizontal) {
+                if (this.#isClickLeftSide(e.srcEvent.clientX)) {this.#prevPage(this.#nowPage)}
+                else {this.#nextPage(this.#nowPage)}
+            } else {
+                if (this.#isClickRightSide(e.srcEvent.clientX)) {this.#prevPage(this.#nowPage)}
+                else {this.#nextPage(this.#nowPage)}
+            }
+            console.log(this.#isHorizontal, this.#isClickLeftSide(e.clientX), this._.O.viewer.width, this._.O.viewer.height);
+        });
+        this._.hammer.on('doubletap', async(e)=>{// テキスト選択切替
+            console.log('ダブルタップが認識されました！', e);
+            Hammer.defaults.cssProps.userSelect = 'text'===Hammer.defaults.cssProps.userSelect ? 'none' : 'text'; // テキスト選択できないので、選択可にしたら、今度はスワイプできなくなった。よってスワイプでなくタップで遷移する
+            console.log('Hammer.defaults.cssProps.userSelect:', Hammer.defaults.cssProps.userSelect);
+        });
+        */
+        this._.hammer.on('doubletap', async(e)=>{
+            console.log('Double-TAP:', e);
+            Hammer.defaults.cssProps.userSelect = 'text'===Hammer.defaults.cssProps.userSelect ? 'none' : 'text'; // テキスト選択できないので、選択可にしたら、今度はスワイプできなくなった。よってスワイプでなくタップで遷移する
+            console.log('Hammer.defaults.cssProps.userSelect:', Hammer.defaults.cssProps.userSelect);
+        });
+
+        this._.hammer.on('tap', async(e)=>{
+            console.log('TAP:', e);
+            if (!this._.loaded) {return}
+            console.log(this.#nowPage)
+            if (this.#isHorizontal) {
+                if (this.#isClickLeftSide(e.srcEvent.clientX)) {this.#prevPage(this.#nowPage)}
+                else {this.#nextPage(this.#nowPage)}
+            } else {
+                if (this.#isClickRightSide(e.srcEvent.clientX)) {this.#prevPage(this.#nowPage)}
+                else {this.#nextPage(this.#nowPage)}
+            }
+            console.log(this.#isHorizontal, this.#isClickLeftSide(e.clientX), this._.O.viewer.width, this._.O.viewer.height);
+        });
+        /*
+        */
+        /*
         this._.O.viewer.addEventListener('click', async(e)=>{
             if (!this._.loaded) {return}
             const nowPage = this._.O.viewer.querySelector('.page.show:not(.dummy)');
             console.log(nowPage)
             if (this.#isHorizontal) {
-                if (this.#isClickLeft(e.clientX)) {this.#prevPage(nowPage)}
+                if (this.#isClickLeftSide(e.clientX)) {this.#prevPage(nowPage)}
                 else {this.#nextPage(nowPage)}
             } else {
-                if (this.#isClickRight(e.clientX)) {this.#prevPage(nowPage)}
+                if (this.#isClickRightSide(e.clientX)) {this.#prevPage(nowPage)}
                 else {this.#nextPage(nowPage)}
             }
-            console.log(this.#isHorizontal, this.#isClickLeft(e.clientX), this._.O.viewer.width, this._.O.viewer.height);
+            console.log(this.#isHorizontal, this.#isClickLeftSide(e.clientX), this._.O.viewer.width, this._.O.viewer.height);
         });
+        this._.O.viewer.addEventListener('dblclick', async(e)=>{
+            if(this._.loaded){this._.O.onClosed();}
+        });
+        */
         this._.O.viewer.setAttribute('tabindex', '0');
         this._.O.viewer.addEventListener('keyup', async(e)=>{
             console.log('keyup:', e);
             if (!this._.loaded) {return}
-            const nowPage = this._.O.viewer.querySelector('.page.show:not(.dummy)');
+            //const nowPage = this._.O.viewer.querySelector('.page.show:not(.dummy)');
+            const nowPage = this.#nowPage;
             if (e.shiftKey) {
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#prevPage(nowPage);}
             } else {
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#nextPage(nowPage);}
-                else if ('Escape'===e.key) {if(this._.loaded){this._.O.onClosed();}} // 設定画面表示
+                else if (['Escape', 'Backspace'].some(k=>k===e.key)) {if(this._.loaded){this._.O.onClosed();}} // 設定画面表示
                 else if ('ArrowLeft'===e.key) {this.#isHorizontal ? this.#prevPage(nowPage) : this.#nextPage(nowPage);}
                 else if ('ArrowRight'===e.key) {this.#isHorizontal ? this.#nextPage(nowPage) : this.#prevPage(nowPage);}
                 else if ('n'===e.key) {this.#nextPage(nowPage)}
@@ -245,8 +330,9 @@ name: 著者名
     #isValidWritingMode(v) {return ['horizontal-tb', 'vertical-rl'].some(n=>n===v)}
     get #isHorizontal() {return this._.O.writingMode.startsWith('h')}
     get #isVertical() {return this._.O.writingMode.startsWith('v')}
-    #isClickLeft(x, y) {return x < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
-    #isClickRight(x, y) {return (this._.O.width / 2) <= x}//画面を左右に二分割したとき左半分をクリックしたか
+    #isClickLeftSide(x, y) {return x < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
+    #isClickRightSide(x, y) {return (this._.O.width / 2) <= x}//画面を左右に二分割したとき左半分をクリックしたか
+    get #nowPage() {return this._.O.viewer.querySelector('.page.show:not(.dummy)');}
     #nextPage(nowPage) {
         if (this.#isSelection) {return}
         console.log('次に進む', nowPage);

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Flip Effect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 本全体を囲むコンテナ -->
+    <div class="book-container">
+        <!-- 各ページ -->
+        <div class="page" id="page1">
+            <div class="page-front"><h1>１ページ目</h1></div>
+            <div class="page-back"><h2>２ページ目</h2><p>１ページ目の裏側です。</p></div>
+        </div>
+
+        <div class="page" id="page2">
+            <div class="page-front"><h1>３ページ目</h1></div>
+            <div class="page-back"><h2>４ページ目</h2><p>３ページ目の裏側です。</p></div>
+        </div>
+
+        <div class="page" id="page3">
+            <div class="page-front"><h1>最後のページ</h1></div>
+            <div class="page-back"></div> <!-- 最後の裏面は空でOK -->
+        </div>
+    </div>
+
+    <!-- ページめくりボタン -->
+    <div class="navigation">
+        <button id="prev-btn">前へ</button>
+        <button id="next-btn">次へ</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

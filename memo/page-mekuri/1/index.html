@@ -1,0 +1,46 @@
+<!-- https://little-strange.hatenablog.com/entry/2021/08/30/235839 -->
+<meta charset="UTF-8">
+<style>
+.cssbk{position:relative;width:100%;padding-bottom:72%;}
+.cssbk input{display:none;}
+.cssbk input~span{
+transition:1.5s;
+-webkit-backface-visibility:hidden;
+backface-visibility:hidden;
+position:absolute;
+width:50%;height:100%;
+background-color:#fffff8;
+border:1px solid black;
+}
+.cssbk input+span{
+left:50%;transform-origin:left;
+transform:perspective(1500px) rotateY(0deg);
+}
+.cssbk input+span+span{
+right:50%;transform-origin:right;
+transform:perspective(1500px) rotateY(180deg);
+}
+.cssbk input:checked+span{
+transform:perspective(1500px) rotateY(-180deg);
+}
+.cssbk input:checked+span+span{
+transform:perspective(1500px) rotateY(0deg);
+}
+</style>
+<div class="cssbk">
+<label>
+<input type="checkbox" />
+<span style="z-index: 99;">最初の文章。</span>
+<span class="dummy">最初の文章。</span>
+</label>
+<label>
+<input type="checkbox" />
+<span style="z-index: 98;">あああああああああああ</span>
+<span class="dummy">あああああああああああ</span>
+</label>
+<label>
+<input type="checkbox" />
+<span style="z-index: 97;">いいいいいいいい</span>
+<span class="dummy">いいいいいいいい</span>
+</label>
+</div>
