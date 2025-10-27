@@ -382,6 +382,7 @@ name: 著者名
             const bookInPages = this._.O.viewer.querySelector('[name="book-in-pages"]');
             const pages = this._.splitter.make(bookInPages);
             console.log('生成したページ数:', pages.length);
+            console.log('生成したページのうち最後のページ番号:', pages.at(-1).dataset.page);
             if (0 < pages.length) {
                 bookInPages.append(...pages);
                 if (!nextPage) {nextPage = pages[0];}

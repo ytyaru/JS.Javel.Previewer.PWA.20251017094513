@@ -40,7 +40,8 @@ class OnePageSplitter {
                     this.#makeFirstP(true, parseInt(EL.dataset.bi));
                     //yield* await this.#splitNodes([...EL.childNodes], inlines, parseInt(EL.dataset.bi));
                     //return this.#splitNodes([...EL.childNodes], inlines, parseInt(EL.dataset.bi));
-                    this.#splitNodes([...EL.childNodes], inlines, parseInt(EL.dataset.bi), pages);
+                    this.#splitNodes([...EL.childNodes], inlines, parseInt(EL.dataset.bi), -1, pages);
+                    console.log('OnePageSplitter.make() if pages.length:', pages.length);
                     if (0 < pages.length) {this._.calculating = false; this._.dummy.hide(); return pages}
                 }
                 else {//<p>以外のBlockElement単体で画面サイズ超過するのは想定外(h1〜h6(の中にあるruby,em,br等も含めて)。<p>以外のブロック要素は全て単体で画面要素内に収まる事。将来の拡張で超過する他要素`<pre>`などが想定される！)
@@ -188,7 +189,7 @@ class OnePageSplitter {
                     this._.continue.si = si+1;
                     this._.continue.ni = i;
                     pages.push(this.#makePage(null, bi, si));
-                    return this.#splitNodes(nodes.slice(i), inlines.slice(i), bi, si+1);
+                    return this.#splitNodes(nodes.slice(i), inlines.slice(i), bi, si+1, pages);
 //                    return this.#makePage(null, bi, si);
 //                    yield* this.#makePage(null, bi, si);
 //                    await new Promise(resolve => setTimeout(resolve, 0)); // イベントループを解放
@@ -206,7 +207,7 @@ class OnePageSplitter {
     //async *#splitSentences(sentences, bi=-1, si=-1) {//:node.textContent.Sentences 一文単位の配列
     //#splitSentences(sentences, bi=-1, si=-1) {//:node.textContent.Sentences 一文単位の配列
     #splitSentences(sentences, bi=-1, si=-1, pages=[]) {//:node.textContent.Sentences 一文単位の配列
-        console.debug('#splitSentences():', sentences, bi, si, this._.dummy.el.lastElementChild.textContent);
+        console.debug('#splitSentences():', sentences.length, sentences, bi, si, this._.dummy.el.lastElementChild.textContent);
         //if (1===sentences.length) {yield* await this.#splitWords(sentences[0].Words, bi, si);}
         //if (1===sentences.length) {return this.#splitWords(sentences[0].Words, bi, si, pages);}
         if (1===sentences.length) {this.#splitWords(sentences[0].Words, bi, si, pages);}
@@ -227,7 +228,8 @@ class OnePageSplitter {
         }
         return pages;
     }
-    async *#splitWords(words, bi=-1, si=-1, pages=[]) {//:node.textContent.Words 一語単位の配列
+    //async *#splitWords(words, bi=-1, si=-1, pages=[]) {//:node.textContent.Words 一語単位の配列
+    #splitWords(words, bi=-1, si=-1, pages=[]) {//:node.textContent.Words 一語単位の配列
         console.debug('#splitWords():', words, bi, si);
         //if (1===words.length && 15 < words[0].length) {yield* await this.#splitGraphemes(words[0].Graphemes, bi, si);}
         if (1===words.length && 15 < words[0].length) {this.#splitGraphemes(words[0].Graphemes, bi, si, pages);}
@@ -316,6 +318,7 @@ class OnePageSplitter {
                 }
             }
         }
+        return pages;
     }
     #makePage(n, bi=-1, si=-1) {// n:残留TextNode or 文字列
         // ページを追加する
