@@ -12,7 +12,8 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     const appHeader = new AppHeader();
     const fileOpener = new FileOpener();
     const parser = new JavelParser();
-    const splitter = new PageSplitter(parser);
+    //const splitter = new PageSplitter(parser);
+    const splitter = new OnePageSplitter(parser);
     const viewer = new JavelViewer();
     appHeader.hide();
     appHeader.resizeTextarea();

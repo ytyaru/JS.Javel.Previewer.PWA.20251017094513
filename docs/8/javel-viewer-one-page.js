@@ -173,6 +173,7 @@ name: 著者名
         // 表紙
         if (this._.O.viewer.querySelector('.cover')) {this._.O.viewer.querySelector('.cover').remove();}
         book.prepend(this._.splitter.makeCover());
+        this._.footer.allPage++;
         console.log(this._.parser.body.manuscript);
         book.append(...this._.splitter.make(book, this._.parser.body.manuscript));
         //book.prepend(this._.splitter.make(book, this._.parser.body.manuscript));
@@ -262,12 +263,12 @@ name: 著者名
             }
         });
         document.addEventListener('wheel', (event) => {
-            console.log('スクロール検知:', event.deltaY);
+            console.log('マウスホイール検知:', event.deltaY, 'pagingDisabled:', this._.pagingDisabled);
             event.deltaY < 0 ? this.#prevPage(this.#nowPage) : this.#nextPage(this.#nowPage);
         });
         //this._.O.viewer.addEventListener('scrollend', async(e)=>{// scrollIntoView({behavior:'smooth'})完了後に前ページを非表示にする
         document.addEventListener('scrollend', async(e)=>{// scrollIntoView({behavior:'smooth'})完了後に前ページを非表示にする
-            console.log('scrollend!!!!!!!!!!!!!!!!!!!!!!!');
+            console.log('scrollend!!!!!!!!!!!!!!!!!!!!!!!:', 'pagingDisabled:', this._.pagingDisabled);
             if (this._.hidePage) {this._.hidePage.classList.remove('show');this._.hidePage=null;}
             this._.footer.resetContent();
             this._.pagingDisabled = false;
@@ -283,7 +284,6 @@ name: 著者名
         //this._.O.viewer.querySelector('[name="loading"]').style.display = 'block';
         Dom.q('[name="loading"]').style.display = 'block';
 
-        /*
         // 表紙
         if (this._.O.viewer.querySelector('.cover')) {this._.O.viewer.querySelector('.cover').remove();}
         //this._.O.viewer.appendChild(this._.splitter.makeCover());
@@ -291,13 +291,13 @@ name: 著者名
         if (bk) {this._.O.viewer.appendChild(this._.splitter.makeCover(), bk);}
         else {this._.O.viewer.appendChild(this._.splitter.makeCover());}
         this._.O.viewer.querySelector('.cover').classList.add('show');
-        */
 
         // ページを含める親要素
         const book = this.#makeBookDiv();
         // 表紙
         if (this._.O.viewer.querySelector('.cover')) {this._.O.viewer.querySelector('.cover').remove();}
         book.prepend(this._.splitter.makeCover());
+        this._.footer.allPage++;
 
         //this._.footer.make(book, calc, this._.O.footer);
         this._.footer.make(this._.O.viewer, calc, this._.O.footer);
@@ -338,6 +338,7 @@ name: 著者名
 //        if (!this._.listened) {this.#listen(); this._.listened=true;} // 操作可能にするのは不可能（ページ追加中に操作するとバグって空ページが大量挿入されてしまう）
 //        book.querySelector('.page:not(.dummy)').classList.add('show');
         book.querySelector('.page.cover').classList.add('show');
+        /*
         // 表紙以降の本文
         for await (let page of this._.splitter.generateAsync(this._.O.viewer)) {
             console.log('ページ数:',page.dataset.page)
@@ -350,6 +351,7 @@ name: 著者名
 //        this._.O.viewer.appendChild(this._.splitter.makeBackCover());
         if (this._.O.viewer.querySelector('.back-cover')) {this._.O.viewer.querySelector('.back-cover').remove();}
         book.appendChild(this._.splitter.makeBackCover());
+        */
         Dom.q('[name="loading"]').style.display = 'none';
         // ノンブルを表示する（未実装）
         this._.footer.title = this._.parser.meta.javel.title;
@@ -371,10 +373,10 @@ name: 著者名
 
     #nextPage(nowPage) {
         console.log('次に進む', nowPage, this.#isSelection, this._.pagingDisabled);
-        if (this.#isSelection) {return}
-        if (this._.pagingDisabled) {return}
+        if (this.#isSelection) {console.log('テキスト選択中につき遷移無視する。');return}
+        if (this._.pagingDisabled) {console.log('ページ遷移中につき遷移無視する。');return}
         let nextPage = nowPage.nextElementSibling;
-
+        console.log('finished:', this._.splitter.finished, 'nextPage:', !!nextPage);
         // とにかく次ページに遷移した時点で一ページずつ追加する
         if (!this._.splitter.finished) {
             const bookInPages = this._.O.viewer.querySelector('[name="book-in-pages"]');
@@ -382,10 +384,11 @@ name: 著者名
             console.log('生成したページ数:', pages.length);
             if (0 < pages.length) {
                 bookInPages.append(...pages);
-                nextPage = pages[0];
-                console.log('ページ生成:', pages);
-                console.log('ページ生成:', nextPage);
-                console.log('ページ生成:', nextPage.textContent);
+                if (!nextPage) {nextPage = pages[0];}
+//                nextPage = pages[0];
+                console.log('次ページ番号:', nextPage.dataset.page);
+//                console.log('ページ生成:', nextPage.textContent);
+                this._.footer.allPage += pages.length;
             }
         }
         /*
@@ -405,9 +408,10 @@ name: 著者名
         */
         console.log('nextPage:', !!nextPage)
         if (nextPage) {
-            console.log('次ページを表示する:', nextPage);
+            console.log('次ページを表示する:', 'nowPage:', nowPage.dataset.page, 'nextPage:', nextPage.dataset.page);
             this._.pagingDisabled = true;
-            nextPage.classList.add('show');
+            nextPage.classList.add('show'); // なぜか次ページがここで表示されてしまいscrollIntoViewが実行できずscrollend発火できないので
+            nowPage.scrollIntoView({behavior:'instant'}); // 元ページに戻す
             // visibility対応（スクロールする）
 //            nowPage.classList.remove('show');
             this._.hidePage = nowPage;
@@ -421,7 +425,7 @@ name: 著者名
         if (this.#isSelection) {return}
         if (this._.pagingDisabled) {return}
         const prevPage = nowPage.previousElementSibling;
-        if (prevPage) {
+        if (prevPage && !prevPage.classList.contains('dummy')) {
             this._.pagingDisabled = true;
             prevPage.classList.add('show');
             // visibility対応（スクロールする）

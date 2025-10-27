@@ -1,6 +1,6 @@
 (function(){
 class PageFooter {
-    constructor() {this._ = {el:null, setupedTimerSwitch:false};}
+    constructor() {this._ = {el:null, setupedTimerSwitch:false, allPage:0};}
     make(viewer, calc, options={}) {
         this._.O = {...this.#defaultOptions, ...options};
         this._.viewer = viewer;
@@ -16,8 +16,8 @@ class PageFooter {
     get el() {return this._.el}
     set title(v) {this._.title=v; this._.el.querySelector(`[name="title"]`).textContent = v}
     set subTitle(v) {this._.subTitle=v; this._.el.querySelector(`[name="subTitle"]`).textContent = v}
-    set nowPage(v) {if(Number.isInteger(v)){this._.nowPage=v; this._.el.querySelector(`[name="nowPage"]`).textContent = v;}}
-    set allPage(v) {if(Number.isInteger(v)){this._.allPage=v; this._.el.querySelector(`[name="allPage"]`).textContent = v;}}
+    set nowPage(v) {if(Number.isInteger(v)){this._.nowPage=v; if(this._.el){this._.el.querySelector(`[name="nowPage"]`).textContent = v;}}}
+    set allPage(v) {if(Number.isInteger(v)){this._.allPage=v; if(this._.el){this._.el.querySelector(`[name="allPage"]`).textContent = v;}}}
     get title() {return this._.title}
     get subTitle() {return this._.subTitle}
     get rate() {return this._.nowPage===this._.allPage ? 1 : this._.nowPage/this._.allPage}

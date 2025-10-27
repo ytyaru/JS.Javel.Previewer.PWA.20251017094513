@@ -1,3 +1,4 @@
+console.log('OnePageSplitter ');
 class OnePageSplitter {
     constructor(parser) {
         this._ = {};
@@ -358,4 +359,37 @@ class OnePageSplitter {
         return Dom.tags.p(o, ...nodes);
     }
 }
+class Page {
+    static make() {return Dom.tags.div({class:'page'})}
+    constructor() {this._ = {}; this._.el = Dom.tags.div({class:'page'}); this._.writingMode=Css.get('--writing-mode');}
+    get el() {return this._.el}
+    addTo(root=document.body) {
+        if (Type.isEl(root)) {
+//            root.appendChild(this.el);  // display
+            root.prepend(this.el); // visibility
+            this._.r = this.el.getBoundingClientRect(); 
+            this._.b = Css.getFloat(`--page-block-size`);
+            this._.i = Css.getFloat(`--page-inline-size`);
+            this._.columnCount = Css.getInt(`--column-count`);
+        }
+        this._.writingMode = Css.get('--writing-mode');
+        console.debug('Page.addTo() writingMode:', this._.writingMode);
+    }
+    show() {this._.el.classList.add('show')}
+    hide() {this._.el.classList.remove('show')}
+    get isVertical() {return 'vertical-rl'===this._.writingMode}
+    set isVertical(v) {if (Type.isBln(v)) {this._.writingMode = v ? 'vertical-rl' : 'horizontal-tb'}}
+    get isHorizontal() {return 'horizontal-tb'===this._.writingMode}
+    set isHorizontal(v) {if (Type.isBln(v)) {this._.writingMode = v ? 'horizontal-tb' : 'vertical-rl'}}
+    get without() {
+        if (null===this._.el.lastElementChild) {return false}
+        const r = this._.el.lastElementChild.getBoundingClientRect();
+        const res = this.isVertical ? this._.r.height < (r.bottom - this._.r.top) : this._.r.width < r.right
+        console.debug('without():', res, 'isV:', this.isVertical, 'this.H:', this._.r.height, '(bottom-top):', (r.bottom - this._.r.top), 'bottom:', r.bottom, 'this.top:', this._.r.top);
+        return res;
+    }
+    #withoutBlock(r) {return this.isVertical ? (r.left < 0) : (this._.b < (r.bottom - this._.r.y));}// block方向の超過真偽
+    #withoutInline(r) {return this.isVertical ? (this._.r.bottom < r.top) : (this._.r.width < r.right);}// inline方向の超過真偽
+}
+class DummyPage extends Page {constructor() {super(); this._.el.classList.add('dummy');}}
 
