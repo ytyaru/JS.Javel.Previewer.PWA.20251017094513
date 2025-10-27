@@ -390,7 +390,7 @@ name: 著者名
 //                console.log('ページ生成:', nextPage.textContent);
                 this._.footer.allPage += pages.length;
             }
-        }
+        } else {this._.footer.allPageLoaded=true;console.warn('Finished!!!!!!!!!');}
         /*
         if (!nextPage && !nowPage.classList.contains('back-cover')) {
             const bookInPages = this._.O.viewer.querySelector('[name="book-in-pages"]');

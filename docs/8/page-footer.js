@@ -1,6 +1,6 @@
 (function(){
 class PageFooter {
-    constructor() {this._ = {el:null, setupedTimerSwitch:false, allPage:0};}
+    constructor() {this._ = {el:null, setupedTimerSwitch:false, allPage:0, allPageLoaded:false};}
     make(viewer, calc, options={}) {
         this._.O = {...this.#defaultOptions, ...options};
         this._.viewer = viewer;
@@ -18,6 +18,7 @@ class PageFooter {
     set subTitle(v) {this._.subTitle=v; this._.el.querySelector(`[name="subTitle"]`).textContent = v}
     set nowPage(v) {if(Number.isInteger(v)){this._.nowPage=v; if(this._.el){this._.el.querySelector(`[name="nowPage"]`).textContent = v;}}}
     set allPage(v) {if(Number.isInteger(v)){this._.allPage=v; if(this._.el){this._.el.querySelector(`[name="allPage"]`).textContent = v;}}}
+    set allPageLoaded(v) {this._.allPageLoaded=!!v; if(this._.el){this._.el.querySelector(`[name="allPageLoaded"]`).style.display=(!!v ? 'none' : 'inline');}}
     get title() {return this._.title}
     get subTitle() {return this._.subTitle}
     get rate() {return this._.nowPage===this._.allPage ? 1 : this._.nowPage/this._.allPage}
@@ -102,6 +103,7 @@ class PageFooter {
                             Dom.tags.span({name:'nowPage'}, this.nowPage),
                             Dom.tags.span({name:'slash', style:'text-orientation:mixed;'}, '/'), 
                             Dom.tags.span({name:'allPage'}, this.allPage),
+                            Dom.tags.span({name:'allPageLoaded'}, '?'), 
                         ),
                         Dom.tags.div({name:'remainArea', style:'display:flex;gap:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, 
                             Dom.tags.span({name: 'remainUnit', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, 'あと'),
