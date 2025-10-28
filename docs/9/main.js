@@ -47,6 +47,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
                 isShowRemain: Dom.q(`[name="isShowRemain"]`).checked,
                 isShowPercent: Dom.q(`[name="isShowPercent"]`).checked,
             },
+            pageMakeMethod: Dom.q(`[name="pageMakeMethod"]`).value,
             onClosed: ()=>{//閲覧から戻る
                 Dom.q(`[name="book"]`).style.display = 'none';
                 Dom.q(`[name="appHeader"]`).style.display = 'block';
@@ -80,6 +81,15 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     Dom.q(`[name="review"]`).addEventListener('keyup', async(e) => {//再び開く
         if ([' ','Enter'].some(k=>k===e.key)) {e.target.dispatchEvent(new Event('click'));}
     });
+
+
+    Dom.q(`[name="pageMakeMethod"]`).addEventListener('change', async(e) => {//再び開く
+        Dom.q(`[name="pageMakeMethodDescription"]`).textContent = e.target.querySelector(`[value="${e.target.value}"]`).dataset.desc;
+        Dom.q(`[name="intervalTimeArea"]`).style.display = 'split'===e.target.value ? 'inline' : 'none';
+    });
+    Dom.q(`[name="pageMakeMethod"]`).value = 'bulk';
+    Dom.q(`[name="pageMakeMethod"]`).dispatchEvent(new Event('change'));
+
     Dom.q(`[name="fullscreen"]`).addEventListener('click', async(e) => {
         if (screenfull.enabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement, {navigationUI: 'hide'});}
     });

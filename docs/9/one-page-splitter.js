@@ -7,6 +7,8 @@ class OnePageSplitter {
 //        this._.size = {inline:inlineSize, block:blockSize}
 //        this._.writingMode = isHorizontal ? 'horizontal-tb' : 'vertical-rl';
         this._.dummy = new DummyPage();
+        this.init();
+        /*
         this._.pages = [];
         this._.continue = {bi:-1, si:-1, ni:-1, sentenceI:-1, wordI:-1, graphemeI:-1, mi:-1}; // 次のページ生成はTextBlockのどこから開始か
 //        this._.continue = {bi:0, si:0, ni:0, sentenceI:0, wordI:0, graphemeI:0, mi:0}; // 次のページ生成はTextBlockのどこから開始か
@@ -14,10 +16,19 @@ class OnePageSplitter {
         this._.finished = false; // 全ページ生成済みか
         this._.text = null;
         this._.tbs = null;
+        */
     }
     get pages() {return this._.pages}
     get calculating() {return this._.calculating}
     get finished() {return this._.finished}
+    init() {
+        this._.pages = [];
+        this._.continue = {bi:-1, si:-1, ni:-1, sentenceI:-1, wordI:-1, graphemeI:-1, mi:-1}; // 次のページ生成はTextBlockのどこから開始か
+        this._.calculating = false; // ページ生成中か
+        this._.finished = false; // 全ページ生成済みか
+        this._.text = null;
+        this._.tbs = null;
+    }
     make(viewer, text=null) {// 一ページだけ生成して終了する（TextBlockの生成までは一括で全部行う？）
         if (!text && this._.finished) {return []}
         this._.calculating = true;

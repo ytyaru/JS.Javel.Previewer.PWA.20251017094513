@@ -53,7 +53,8 @@
   <script src="page-footer.js"></script>
   <!--<script src="javel-viewer.js"></script>-->
   <!--<script src="javel-viewer-one-page.js"></script>-->
-  <script src="javel-viewer-interval.js"></script>
+  <!--<script src="javel-viewer-interval.js"></script>-->
+  <script src="javel-viewer-select.js"></script>
   <script src="main.js"></script>
 </head>
 <body>
@@ -431,16 +432,22 @@ author:
         <fieldset name="size-field"><legend>ページ生成方式</legend>
             <select name="pageMakeMethod">
                 <option value="bulk" data-desc="最初に全ページを読み込む。">一括</option>
+                <option value="split" data-desc="ユーザのページ遷移操作か一定時間毎に一ページずつ読み込む。">分割</option>
+                <!--
+                <option value="bulk" data-desc="最初に全ページを読み込む。">一括</option>
                 <option value="split" data-desc="次ページに進む毎に一ページずつ読み込む。">分割</option>
                 <option value="interval" data-desc="10秒毎に一ページずつ読み込む。">定期</option>
                 <option value="splitInterval" data-desc="次ページに進むか10秒毎に一ページずつ読み込む。">分割定期</option>
+                -->
             </select>
-            <br>
-            <span name="pageMakeMethodDescription">ユーザ操作不能に陥る読込時間をいつどれくらいに分配するか。全ページ判明する読込完了にかかる時間はどれほどか。最初に操作可能になるまでの待機時間はいつか。</span>
+            <!--<br>-->
+            <!--<span name="pageMakeMethodDescription">ユーザ操作不能に陥る読込時間をいつどれくらいに分配するか。全ページ判明する読込完了にかかる時間はどれほどか。最初に操作可能になるまでの待機時間はいつか。</span>-->
+            <span name="pageMakeMethodDescription"></span>
             <!--
             <div><label>最低</label><input name="minFontSize" type="number" min="8" max="32" value="16"><label>px/字</label></div>
+            <div><input name="intervalTime" type="number" min="2" max="300" value="5"><label>秒/ページ</label></div>
             -->
-            <div><input name="intervalTime" type="number" min="2" max="300" value="10"><label>秒/ページ</label></div>
+            <div name="intervalTimeArea" style="display:none;"><input name="intervalTime" type="number" min="2" max="300" value="5"><label>秒/ページ</label></div>
         </fieldset>
         <div style="display:flex;align-items:center;"><h2>ページ設定</h2><label><label><input name="isPrioritizeManuscript" type="checkbox" checked>原稿ファイルの設定を優先</label></div>
         
