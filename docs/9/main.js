@@ -18,6 +18,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     appHeader.hide();
     appHeader.resizeTextarea();
     Dom.q(`[name="view"]`).addEventListener('click', async(e) => {
+        viewer.hideScrollbar();
         Dom.q(`[name="review"]`).style.display = 'inline';
         Dom.q(`[name="appHeader"]`).style.display = 'none';
         Dom.q(`[name="input"]`).style.display = 'none';
@@ -59,6 +60,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     });
     Dom.q(`[name="review"]`).addEventListener('click', async(e) => {//再び開く
         console.log('click:')
+        viewer.hideScrollbar();
         /*
         if (screenfull.enabled) {
             if ('full'===Dom.q(`[name="size"]`).value){screenfull.request(document.documentElement, {navigationUI: 'hide'});}
@@ -111,6 +113,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     Dom.q(`[name="isAutoTypography"]`).addEventListener('input', async(e) => {'size column whitespace'.split(' ').map(n=>Dom.q(`[name="${n}-field"]`).disabled=e.target.checked);});//おまかせ
 
     // 初期化
+    viewer.showScrollbar();
     Dom.q(`[name="fullscreen"]`).innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面';
     Dom.q(`[name="view"]`).focus();
 });

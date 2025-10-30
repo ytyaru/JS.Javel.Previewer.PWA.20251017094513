@@ -179,6 +179,7 @@ name: 著者名
 //        Dom.q('[name="loading"]').style.display = 'block';
         const book = this.#makeBookDiv();// ページを含める親要素
 
+        book.innerHTML = '';
         this._.splitter.init();
 
         // 表紙
@@ -264,7 +265,8 @@ name: 著者名
         this._.hammer.get('press').set({ time:3000 }); // 3秒長押し
         this._.hammer.on('press', async(e)=>{
             console.log('PRESS:', e);
-            if(this._.loaded){this._.O.onClosed();this._.footer.hide();}
+//            if(this._.loaded){this._.O.onClosed();this._.footer.hide();}
+            this.turnBack();
         });
         this._.hammer.on('doubletap', async(e)=>{
             console.log('Double-TAP:', e);
@@ -294,7 +296,8 @@ name: 著者名
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#prevPage(nowPage);}
             } else {
                 if ([' ', 'Enter'].some(k=>k===e.key)) {this.#nextPage(nowPage);}
-                else if (['Escape', 'Backspace'].some(k=>k===e.key)) {if(this._.loaded){this._.O.onClosed();this._.footer.hide();}} // 設定画面表示
+//                else if (['Escape', 'Backspace'].some(k=>k===e.key)) {if(this._.loaded){this._.O.onClosed();this._.footer.hide();}} // 設定画面表示
+                else if (['Escape', 'Backspace'].some(k=>k===e.key)) {this.turnBack()} // 設定画面表示
                 else if ('ArrowLeft'===e.key) {this.#isHorizontal ? this.#prevPage(nowPage) : this.#nextPage(nowPage);}
                 else if ('ArrowRight'===e.key) {this.#isHorizontal ? this.#nextPage(nowPage) : this.#prevPage(nowPage);}
                 else if ('n'===e.key) {this.#nextPage(nowPage)}
@@ -311,6 +314,25 @@ name: 著者名
             this._.footer.resetContent();
             this._.pagingDisabled = false;
         });
+    }
+    turnBack() {// 最初の画面に戻る
+        if(this._.loaded){
+            this.showScrollbar();
+            this._.O.onClosed();
+            this._.footer.hide();
+        }
+    }
+    hideScrollbar() {
+        Css.set('--overflow', 'hidden');
+        Css.set('--scrollbar-width', 'none');
+        Css.set('--webkit-scrollbar', 'none');
+        Css.set('--ms-overflow-style', 'none');
+    }
+    showScrollbar() {
+        Css.set('--overflow', 'auto');
+        Css.set('--scrollbar-width', 'auto');
+        Css.set('--webkit-scrollbar', 'block');
+        Css.set('--ms-overflow-style', 'auto');
     }
     #isValidWritingMode(v) {return ['horizontal-tb', 'vertical-rl'].some(n=>n===v)}
     get #isHorizontal() {return this._.O.writingMode.startsWith('h')}
