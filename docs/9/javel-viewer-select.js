@@ -274,15 +274,13 @@ name: 著者名
         this._.hammer.on('tap', async(e)=>{
             console.log('TAP:', e);
             if (!this._.loaded) {return}
-            console.log('e.srcEvent:', e.srcEvent)
+//            console.log('e.srcEvent:', e.srcEvent)
 //            console.log(this.#nowPage, this.#isHorizontal, this.#isClickLeftSide(e.srcEvent.clientX), this.#isClickRightSide(e.srcEvent.clientX));
             if (this.#isHorizontal) {
-                //if (this.#isClickLeftSide(e.srcEvent.clientX)) {this.#prevPage(this.#nowPage)}
-                if (this.#isClickLeftSide(e.srcEvent.offsetX)) {this.#prevPage(this.#nowPage)}
+                if (this.#isClickLeftSide(e.srcEvent.clientX)) {this.#prevPage(this.#nowPage)}
                 else {this.#nextPage(this.#nowPage)}
             } else {
-                //if (this.#isClickRightSide(e.srcEvent.clientX)) {console.log('縦書きの右側をタップした。');this.#prevPage(this.#nowPage)}
-                if (this.#isClickRightSide(e.srcEvent.offsetX)) {console.log('縦書きの右側をタップした。');this.#prevPage(this.#nowPage)}
+                if (this.#isClickRightSide(e.srcEvent.clientX)) {console.log('縦書きの右側をタップした。');this.#prevPage(this.#nowPage)}
                 else {this.#nextPage(this.#nowPage)}
             }
 //            console.log(this.#isHorizontal, this.#isClickLeftSide(e.clientX), this._.O.viewer.width, this._.O.viewer.height);
@@ -317,16 +315,9 @@ name: 著者名
     #isValidWritingMode(v) {return ['horizontal-tb', 'vertical-rl'].some(n=>n===v)}
     get #isHorizontal() {return this._.O.writingMode.startsWith('h')}
     get #isVertical() {return this._.O.writingMode.startsWith('v')}
-//    #isClickLeftSide(x, y) {return x < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
-//    #isClickRightSide(x, y) {return (this._.O.width / 2) <= x}//画面を左右に二分割したとき左半分をクリックしたか
-    #isClickLeftSide(x, y) {console.log('x:', x); return x < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
-    #isClickRightSide(x, y) {console.log('x:', x); return (this._.O.width / 2) <= x}//画面を左右に二分割したとき左半分をクリックしたか
-//    #isClickLeftSide(x, y) {console.log(this._.O.width / 2, (x/this._.splitter.pages.length));return (x/this._.splitter.pages.length) < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
-//    #isClickRightSide(x, y) {console.log(this._.O.width / 2, (x/this._.splitter.pages.length));return (this._.O.width / 2) <= (x/this._.splitter.pages.length)}//画面を左右に二分割したとき左半分をクリックしたか
-//    #isClickLeftSide(x, y) {console.log(this._.O.width / 2, 'x:', x, (x/parseInt(this.#nowPage.dataset.page)));return (x/parseInt(this.#nowPage.dataset.page)) < (this._.O.width / 2)}//画面を左右に二分割したとき左半分をクリックしたか
-//    #isClickRightSide(x, y) {console.log(this._.O.width / 2, 'x:', x, (x/parseInt(this.#nowPage.dataset.page)));return (this._.O.width / 2) <= (x/parseInt(this.#nowPage.dataset.page))}//画面を左右に二分割したとき左半分をクリックしたか
+    #isClickLeftSide(x, y) {return (x % this._.O.width) < (this._.O.width/2)}//画面を左右に二分割したとき左半分をクリックしたか
+    #isClickRightSide(x, y) {return (this._.O.width/2) <= (x % this._.O.width)}//画面を左右に二分割したとき左半分をクリックしたか
     get #nowPage() {return this._.O.viewer.querySelector('.page.show:not(.dummy)');}
-
     #nextPage(nowPage) {
         console.log('次に進む', nowPage, this.#isSelection, this._.pagingDisabled);
         if (this.#isSelection) {console.log('テキスト選択中につき遷移無視する。');return}
