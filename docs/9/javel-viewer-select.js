@@ -179,15 +179,17 @@ name: 著者名
 //        Dom.q('[name="loading"]').style.display = 'block';
         const book = this.#makeBookDiv();// ページを含める親要素
 
-        book.innerHTML = '';
-        this._.splitter.init();
+        console.log(book);
+//        book.innerHTML = '';
+        this._.splitter.init(book);
 
         // 表紙
         if (this._.O.viewer.querySelector('.cover')) {this._.O.viewer.querySelector('.cover').remove();}
         book.prepend(this._.splitter.makeCover());
         this._.footer.allPage++;
         console.log(this._.parser.body.manuscript);
-        book.append(...this._.splitter.make(book, this._.parser.body.manuscript));
+        //book.append(...this._.splitter.make(book, this._.parser.body.manuscript));
+        book.append(...this._.splitter.make(this._.O.viewer, this._.parser.body.manuscript));
         if (this.#isSplitMode()) {
             // これ以降のページは指定時間毎に自動生成する
             this._.interval = setInterval(()=>{
@@ -352,7 +354,8 @@ name: 著者名
         if (!this._.splitter.finished && this._.footer.nowPage===this._.footer.allPage && !this._.pagingDisabled && this.#isSplitMode) {
 //            console.log('未読込につき遷移無視する。');return
             const bookInPages = this._.O.viewer.querySelector('[name="book-in-pages"]');
-            const pages = this._.splitter.make(bookInPages);
+            //const pages = this._.splitter.make(bookInPages);
+            const pages = this._.splitter.make();
             console.log('生成したページ数:', pages.length);
             console.log('生成したページのうち最後のページ番号:', pages.at(-1).dataset.page);
             if (0 < pages.length) {

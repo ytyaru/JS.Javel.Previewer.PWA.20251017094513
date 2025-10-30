@@ -21,7 +21,15 @@ class OnePageSplitter {
     get pages() {return this._.pages}
     get calculating() {return this._.calculating}
     get finished() {return this._.finished}
-    init() {
+    init(viewer) {
+        console.log(viewer);
+        /*
+        if (viewer) {
+            const dummy = viewer.querySelector('.dummy');
+            viewer.innerHTML = '';
+            viewer.append(dummy);
+        }
+        */
         this._.pages = [];
         this._.continue = {bi:-1, si:-1, ni:-1, sentenceI:-1, wordI:-1, graphemeI:-1, mi:-1}; // 次のページ生成はTextBlockのどこから開始か
         this._.calculating = false; // ページ生成中か
@@ -30,10 +38,11 @@ class OnePageSplitter {
         this._.tbs = null;
     }
     make(viewer, text=null) {// 一ページだけ生成して終了する（TextBlockの生成までは一括で全部行う？）
-        if (!text && this._.finished) {return []}
+        if (!text && this._.finished) {console.warn('完了済みだからmake()しない。');return []}
         this._.calculating = true;
         this._.dummy.show();
         this._.dummy.addTo(viewer);
+//        this._.dummy.addTo(viewer.parentElement);
         //if (!this._.text) {this._.finished = false; this._.text = text; this._.parser.body.manuscript = text; this._.calculating = false; this._.dummy.hide(); return [this.makeCover()];}
         if (-1===this._.continue.bi) {this._.finished = false; this._.continue.bi=0; this._.continue.mi=0; this._.text = text; this._.parser.body.manuscript = text; this._.calculating = false; this._.blocks = (new TextBlock()).parse(text);}
         let block = null;
@@ -390,13 +399,26 @@ class Page {
     constructor() {this._ = {}; this._.el = Dom.tags.div({class:'page'}); this._.writingMode=Css.get('--writing-mode');}
     get el() {return this._.el}
     addTo(root=document.body) {
+        console.warn('ダミーは存在するか：', Dom.qs('.dummy').length);
+        console.warn('Type.isEl(root)：', Type.isEl(root));
+
+//        const d = Dom.q('.dummy');
+//        if (d) {this._.el = d;}
+//        if (!Dom.q(`.page.dummy`)) {this._.el = Dom.tags.div({class:'page'});}
         if (Type.isEl(root)) {
 //            root.appendChild(this.el);  // display
             root.prepend(this.el); // visibility
+            this.show();
+            console.warn('要素は同一か：', Dom.q('.dummy')===this._.el);
+            console.warn('要素は同一か：', this.el===this._.el);
+            console.warn('要素はshowか：', Dom.q('.dummy').classList.contains('show'));
             this._.r = this.el.getBoundingClientRect(); 
+//            this.hide();
+            console.log('this._.r:', this._.r);
             this._.b = Css.getFloat(`--page-block-size`);
             this._.i = Css.getFloat(`--page-inline-size`);
             this._.columnCount = Css.getInt(`--column-count`);
+            console.warn('this._.b,i：', this._.b, this._.i);
         }
         this._.writingMode = Css.get('--writing-mode');
         console.debug('Page.addTo() writingMode:', this._.writingMode);
