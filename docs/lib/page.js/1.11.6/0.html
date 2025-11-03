@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="full.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', async(event) => {
+    console.log('DOMContentLoaded');
+    //console.log('page_js:', page_js);
+    //console.log('pagejs:', pagejs);
+    //console.log('pageJs:', pageJs);
+    //console.log('page:', page);
+
+    page.configure({window:window });
+    page('/main', ()=>{alert('main')});
+    page('/sub', ()=>{alert('sub')});
+    console.log('move');
+//    page('/main');
+//    page.redirect('/main');
+    page.show('/main');
+    doqument.querySelector('#main').addEventListener('click', (e)=>page.show('/main'));
+    doqument.querySelector('#sub').addEventListener('click', (e)=>page.show('/sub'));
+});
+</script>
+</head>
+<body>
+<button id="main">main</button>
+<button id="sub">sub</button>
+</body>
+</html>
+

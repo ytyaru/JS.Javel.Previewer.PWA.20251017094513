@@ -305,23 +305,41 @@ name: 著者名
                 else if ('p'===e.key) {this.#prevPage(nowPage)}
             }
         });
-        document.addEventListener('wheel', (event) => {
+
+
+        this._.O.viewer.addEventListener('wheel', (event) => {
             console.log('マウスホイール検知:', event.deltaY, 'pagingDisabled:', this._.pagingDisabled);
             event.deltaY < 0 ? this.#prevPage(this.#nowPage) : this.#nextPage(this.#nowPage);
         });
-        document.addEventListener('scrollend', async(e)=>{// scrollIntoView({behavior:'smooth'})完了後に前ページを非表示にする
+        /*
+        this._.O.viewer.addEventListener('scrollend', async(e)=>{// scrollIntoView({behavior:'smooth'})完了後に前ページを非表示にする
             console.log('scrollend!!!!!!!!!!!!!!!!!!!!!!!:', 'pagingDisabled:', this._.pagingDisabled);
             if (this._.hidePage) {this._.hidePage.classList.remove('show');this._.hidePage=null;}
             this._.footer.resetContent();
             this._.pagingDisabled = false;
         });
+        document.addEventListener('wheel', (event) => {
+            console.log('マウスホイール検知:', event.deltaY, 'pagingDisabled:', this._.pagingDisabled);
+            event.deltaY < 0 ? this.#prevPage(this.#nowPage) : this.#nextPage(this.#nowPage);
+        });
+        */
+        document.addEventListener('scrollend', async(e)=>{// scrollIntoView({behavior:'smooth'})完了後に前ページを非表示にする
+            console.log('scrollend!!!!!!!!!!!!!!!!!!!!!!!:', 'pagingDisabled:', this._.pagingDisabled);
+            if ('none'!==this._.O.viewer.style.display) {
+                if (this._.hidePage) {this._.hidePage.classList.remove('show');this._.hidePage=null;}
+                this._.footer.resetContent();
+                this._.pagingDisabled = false;
+            }
+        });
+        /*
+        */
     }
     turnBack() {// 最初の画面に戻る
-        if(this._.loaded){
+//        if(this._.loaded){
             this.showScrollbar();
             this._.O.onClosed();
             this._.footer.hide();
-        }
+//        }
     }
     hideScrollbar() {
         Css.set('--overflow', 'hidden');

@@ -114,11 +114,12 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     });
     Dom.q(`[name="size"]`).value = Dom.q(`[name="size"] option:first-child`).value;
     Dom.q(`[name="size"]`).dispatchEvent(new Event('input'));
-    Dom.q(`[name="isAutoTypography"]`).addEventListener('input', async(e) => {'size column whitespace'.split(' ').map(n=>Dom.q(`[name="${n}-field"]`).disabled=e.target.checked);});//おまかせ
+    Dom.q(`[name="isAutoTypography"]`).addEventListener('input', async(e) => {'size column whitespace'.split(' ').map(n=>Dom.q(`[name="${n}Field"]`).disabled=e.target.checked);});//おまかせ
 
     // 初期化
     viewer.showScrollbar();
     Dom.q(`[name="fullscreen"]`).innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面';
+    Dom.q(`[name="isAutoTypography"]`).dispatchEvent(new Event('input'));
     Dom.q(`[name="view"]`).focus();
 });
 window.addEventListener('beforeunload', (event) => {

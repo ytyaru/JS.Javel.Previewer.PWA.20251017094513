@@ -429,7 +429,7 @@ author:
     </div>
     <!--<div name="config">-->
     <div name="page-config-section">
-        <fieldset name="size-field"><legend>ページ生成方式</legend>
+        <fieldset name="pageMakeMethodField"><legend>ページ生成方式</legend>
             <select name="pageMakeMethod">
                 <option value="bulk" data-desc="最初に全ページを読み込む。">一括</option>
                 <option value="split" data-desc="ユーザのページ遷移操作か一定時間毎に一ページずつ読み込む。">分割</option>
@@ -467,15 +467,15 @@ author:
         <div name="typography">
             <div style="display:flex;align-items:center;"><h3>タイポグラフィ</h3><label><input name="isAutoTypography" type="checkbox" checked>おまかせ</label><br></div>
             <div style="display:flex;align-items:center;">
-            <fieldset name="size-field"><legend>サイズ</legend>
+            <fieldset name="sizeField"><legend>サイズ</legend>
                 <div><label>最低</label><input name="minFontSize" type="number" min="8" max="32" value="16"><label>px/字</label></div>
                 <div><label>最長</label><input name="lineOfChars" type="number" min="25" max="50" value="40"><label>字/行</label></div>
             </fieldset>
-            <fieldset name="column-field"><legend>段組み</legend>
+            <fieldset name="columnField"><legend>段組み</legend>
                 <div><input name="columnCount" type="number" min="1" max="2" value="1"><label>段</label></div>
                 <div><input name="columnGap" type="number" min="0" max="4" value="2" step="0.5"><label>em間隔</label></div>
             </fieldset>
-            <fieldset name="whitespace-field"><legend>余白</legend>
+            <fieldset name="whitespaceField"><legend>余白</legend>
                 <!--<input name="lineOfChars" type="number" min="25" max="50">字／行-->
                 <div><input name="lineHeight" type="number" min="1" max="1.8" step="0.05" value="1.7"><label>em行間</label></div>
                 <div><input name="letterSpacing" type="number" min="0" max="0.2" step="0.01" value="0.05"><label>em字間</label></div>
@@ -484,8 +484,8 @@ author:
         </div>
         <fieldset><legend>フォント・ファミリ</legend>
             <table>
-                <tr><td><label>見出し</label></td><td><input name="heading-font-family" type="" placeholder="'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif" value=""></td></tr>
-                <tr><td><label>本文</label></td><td><input name="paragraph-font-family" type="" placeholder="'Noto Serif JP', 'Source Han Serif JP', 'Noto Color Emoji', serif" value=""></td></tr>
+                <tr><td><label>見出し</label></td><td><input name="heading-font-family" type="" placeholder="'源暎エムゴv2', 'Noto Sans JP', 'Source Han Sans JP', 'Noto Color Emoji', sans-serif" value=""></td></tr>
+                <tr><td><label>本文</label></td><td><input name="paragraph-font-family" type="" placeholder="'源暎こぶり明朝', 'Noto Serif JP', 'Source Han Serif JP', 'Noto Color Emoji', serif" value=""></td></tr>
             </table>
         </fieldset>
 
