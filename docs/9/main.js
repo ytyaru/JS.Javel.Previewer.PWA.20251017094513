@@ -24,6 +24,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
         Dom.q(`[name="input"]`).style.display = 'none';
         const isAuto = Dom.q(`[name="isAutoTypography"]`).checked;
         const viewEl = Dom.q(`[name="book"]`);
+        viewEl.style.display = 'block';
         await viewer.make({
 //            javel: 'asset/javel/intro.jv',
             javel: Dom.q(`[name="manuscript"]`).value,

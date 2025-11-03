@@ -36,6 +36,8 @@ class OnePageSplitter {
         this._.finished = false; // 全ページ生成済みか
         this._.text = null;
         this._.tbs = null;
+
+        console.log('r:', this._.dummy._.r);
     }
     make(viewer, text=null) {// 一ページだけ生成して終了する（TextBlockの生成までは一括で全部行う？）
         if (!text && this._.finished) {console.warn('完了済みだからmake()しない。');return []}
@@ -54,6 +56,9 @@ class OnePageSplitter {
             console.log('OnePageSplitter.make() block:', block, this._.blocks.length, this._.blocks);
             const [el, inlines] = this._.hp.toElBl(block, this._.continue.bi); // TextBlockをHTML要素に変換する
             this._.dummy.el.appendChild(el); // ブロック要素単位（h, p）
+            console.warn('this._.dummy.el.rect:', this._.dummy.el.getBoundingClientRect());
+            console.warn('this._.dummy.el.rect:', this._.dummy.el.getBoundingClientRect());
+            console.warn('el.rect:', el.getBoundingClientRect());
             if (this._.dummy.without) {
                 const EL = el.cloneNode(true);
                 this._.dummy.el.removeChild(el); // なぜかDOMから削除されるだけでなく要素ごと消えてしまう！のでcloneNode(true)でコピーする。
@@ -407,18 +412,20 @@ class Page {
 //        if (!Dom.q(`.page.dummy`)) {this._.el = Dom.tags.div({class:'page'});}
         if (Type.isEl(root)) {
 //            root.appendChild(this.el);  // display
-            root.prepend(this.el); // visibility
-            this.show();
-            console.warn('要素は同一か：', Dom.q('.dummy')===this._.el);
-            console.warn('要素は同一か：', this.el===this._.el);
-            console.warn('要素はshowか：', Dom.q('.dummy').classList.contains('show'));
-            this._.r = this.el.getBoundingClientRect(); 
-//            this.hide();
-            console.log('this._.r:', this._.r);
-            this._.b = Css.getFloat(`--page-block-size`);
-            this._.i = Css.getFloat(`--page-inline-size`);
-            this._.columnCount = Css.getInt(`--column-count`);
-            console.warn('this._.b,i：', this._.b, this._.i);
+            if (!Dom.q('.dummy')) {
+                root.prepend(this.el); // visibility
+                this.show();
+                console.warn('要素は同一か：', Dom.q('.dummy')===this._.el);
+                console.warn('要素は同一か：', this.el===this._.el);
+                console.warn('要素はshowか：', Dom.q('.dummy').classList.contains('show'));
+                this._.r = this.el.getBoundingClientRect(); 
+    //            this.hide();
+                console.log('this._.r:', this._.r);
+                this._.b = Css.getFloat(`--page-block-size`);
+                this._.i = Css.getFloat(`--page-inline-size`);
+                this._.columnCount = Css.getInt(`--column-count`);
+                console.warn('this._.b,i：', this._.b, this._.i);
+            }
         }
         this._.writingMode = Css.get('--writing-mode');
         console.debug('Page.addTo() writingMode:', this._.writingMode);
@@ -433,6 +440,7 @@ class Page {
         if (null===this._.el.lastElementChild) {return false}
         const r = this._.el.lastElementChild.getBoundingClientRect();
         const res = this.isVertical ? this._.r.height < (r.bottom - this._.r.top) : this._.r.width < r.right
+        console.warn('lastEl:', this._.el.lastElementChild);
         console.debug('without():', res, 'isV:', this.isVertical, 'this.H:', this._.r.height, '(bottom-top):', (r.bottom - this._.r.top), 'bottom:', r.bottom, 'this.top:', this._.r.top);
         return res;
     }
