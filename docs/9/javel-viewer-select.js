@@ -140,7 +140,8 @@ name: 著者名
 
         inlineSize = this.#isVertical ? H : W;
         blockSize = this.#isVertical ? W : H;
-        const columnWidth = 1===columnCount ? inlineSize : inlineSize + Css.getFloat('--column-gap')
+        //const columnWidth = 1===columnCount ? inlineSize : inlineSize + Css.getFloat('--column-gap')
+        const columnWidth = 1===columnCount ? inlineSize : (this.#isVertical ? inlineSize/columnCount : inlineSize);
         Css.set('--writing-mode', this._.O.writingMode);
         Css.set(`--page-inline-size`, `${inlineSize}px`);
         Css.set(`--page-block-size`, `${blockSize}px`);
@@ -171,6 +172,7 @@ name: 著者名
     }
     async #setup() {
         const calc = this.#setSize();
+        console.log('calc:', calc);
         this.#makeLoading();
         Dom.q('[name="loading"]').style.display = 'block';
         await this.#load();
