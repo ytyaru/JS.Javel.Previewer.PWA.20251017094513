@@ -145,7 +145,8 @@ class PageFooter {
 
             console.log('footer:', r);
 //            this._.el.style.position = 'absolute';
-            this._.el.style.top = `${calc.isVertical ? (calc.height/2)-(H/2)+(calc.columnGap.px/2) : 0}px`;
+            //this._.el.style.top = `${calc.isVertical ? (calc.height/2)-(H/2)+(calc.columnGap.px/2) : 0}px`;
+            this._.el.style.top = `${calc.isVertical ? (calc.height/2)-(H/2) : 0}px`;
             this._.el.style.left = `${calc.isVertical ? ((calc.width/2)-(r.width/2)) : (calc.width/2)-(H/2)}px`;
             this._.el.style.width = `${calc.isVertical ? calc.width : H}px`;
             this._.el.style.height = `${calc.isVertical ? H : calc.height}px`;

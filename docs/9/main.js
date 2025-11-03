@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     //const splitter = new PageSplitter(parser);
     const splitter = new OnePageSplitter(parser);
     const viewer = new JavelViewer();
+    viewer.showScrollbar();
     appHeader.hide();
     appHeader.resizeTextarea();
     Dom.q(`[name="view"]`).addEventListener('click', async(e) => {
@@ -50,7 +51,9 @@ window.addEventListener('DOMContentLoaded', async(event) => {
                 isShowPercent: Dom.q(`[name="isShowPercent"]`).checked,
             },
             pageMakeMethod: Dom.q(`[name="pageMakeMethod"]`).value,
+            intervalTime: Number(Dom.q(`[name="intervalTime"]`).value),
             onClosed: ()=>{//閲覧から戻る
+                viewer.showScrollbar();
                 Dom.q(`[name="book"]`).style.display = 'none';
                 Dom.q(`[name="appHeader"]`).style.display = 'block';
                 Dom.q(`[name="input"]`).style.display = 'block';

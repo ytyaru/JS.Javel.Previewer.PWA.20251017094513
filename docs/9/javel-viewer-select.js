@@ -8,7 +8,6 @@ class JavelViewer {
         this._.footer = new PageFooter();
         this._.hammer = new Hammer(Dom.q(`[name="book"]`));
         this._.interval = null;
-        this._.intervalTime = 5000;
     }
     #isBulkMode() {return 'bulk'===this._.O.pageMakeMethod}
     #isSplitMode() {return 'split'===this._.O.pageMakeMethod}
@@ -34,10 +33,9 @@ class JavelViewer {
         lineHeight: 1.7,
         letterSpacing: 0.05,
         pageMakeMethod: 'bulk',
+        intervalTime: 5,
 //        isFullScreen: false,
         onClosed: ()=>{},
-
-        intervalTime: 5000,
     } }
     #setOptions(options) {
         console.log('#setOptions() options:', options);
@@ -191,6 +189,7 @@ name: 著者名
         //book.append(...this._.splitter.make(book, this._.parser.body.manuscript));
         book.append(...this._.splitter.make(this._.O.viewer, this._.parser.body.manuscript));
         if (this.#isSplitMode()) {
+            if (null!==this._.interval) { clearInterval(this._.interval); }// 完了する前に戻って再びページ生成されても前回のタイマーを削除する
             // これ以降のページは指定時間毎に自動生成する
             this._.interval = setInterval(()=>{
                 this.#nowPage.scrollIntoView({behavior:'instant'}); // 元ページに戻す。これがないとなぜか空ページ表示される。
@@ -211,7 +210,7 @@ name: 著者名
                 this._.footer.allPage = this._.splitter.pages.length;
                 console.warn('this._.footer.allPage:', this._.footer.allPage, this._.splitter.pages);
                 this.#nowPage.scrollIntoView({behavior:'instant'}); // 元ページに戻す。これがないとなぜか空ページ表示される。
-            }, this._.intervalTime);
+            }, this._.O.intervalTime*1000);
         } else {// Bulk mode
             let pages = null;
             //while (null !== (pages = this._.splitter.make())) {
@@ -368,7 +367,8 @@ name: 著者名
                 nowPage.scrollIntoView({behavior:'instant'}); // 元ページに戻す
             }
         }
-        if (this._.splitter.finished && this.#isSplitMode) {this._.footer.allPageLoaded=true;console.warn('Finished!!!!!!!!!');}
+//        if (this._.splitter.finished && this.#isSplitMode) {this._.footer.allPageLoaded=true;console.warn('Finished!!!!!!!!!');}
+        this._.footer.allPageLoaded = (this._.splitter.finished && this.#isSplitMode);
         console.log('nextPage:', !!nextPage)
         if (nextPage) {
             console.log('次ページを表示する:', 'nowPage:', nowPage.dataset.page, 'nextPage:', nextPage.dataset.page);
