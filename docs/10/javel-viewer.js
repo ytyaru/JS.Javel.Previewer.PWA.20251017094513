@@ -58,28 +58,6 @@ class JavelViewer {
         this._.O = O;
         console.log('設定:', O, !O.javel && (Type.isEl(O.editor) && !!O.editor.value));
     }
-    #makeLoading() {
-        //if (!this._.O.viewer.querySelector('[name="loading"]')) {
-        if (!Dom.q('[name="loading"]')) {
-            Dom.q(`[name="overlay"]`).append(
-                Dom.tags.div({name:'loading', style:'display:none; font-size:1.25em; color:var(--fg-color); background-color:var(--bg-color); border:8px ridge var(--fg-color);'}, 
-                    Dom.tags.span({name:'loading-rate'}, '0'),
-                    '　', Dom.tags.span({name:'loading-all-page'}), 'ページ', 
-                    Dom.tags.br(),
-                    Dom.tags.span({name:'loading-message'}, '読込中……しばしお待ち下さい'),
-                ),
-            );
-            /*
-            //this._.O.viewer.append(Dom.tags.div({name:'loading', style:'display:none;'}, 
-//            this._.O.viewer.append(Dom.tags.div({name:'loading', style:'display:none; position:fixed; top:0; left:0; width:100%;  height:100%; z-index:999; display:flex; justify-content:center; align-items:center;'}, 
-                Dom.tags.span({name:'loading-rate'}, '0'),
-                '　', Dom.tags.span({name:'loading-all-page'}), 'ページ', 
-                Dom.tags.br(), Dom.tags.span({name:'loading-message'}, '読込中……しばしお待ち下さい'),
-            ));
-            */
-        }
-        Dom.q('[name="loading"]').display = 'none';
-    }
     async #load() {
         if (!this._.O.viewer.querySelector('[name="error"]')) {
             this._.O.viewer.append(Dom.tags.div({name:'error', style:'display:none; widht:100%; height:100%;'}, 
@@ -118,7 +96,6 @@ name: 著者名
         const book = this._.O.viewer.querySelector(`[name="book-in-pages"]`);
         console.log('#makeBookDiv():', book);
         if (book) {book.innerHTML = ''; return book;}
-        //else {const b = Dom.tags.div({name:'book', style:';display:block;padding:0;margin:0;box-sizing:border-box;', 'data-all-page':0});this._.O.viewer.appendChild(b); return b;}
         else {const b = Dom.tags.div({name:'book-in-pages', style:';display:block;padding:0;margin:0;box-sizing:border-box;', 'data-all-page':0});this._.O.viewer.appendChild(b); return b;}
     }
     #isOverSilverRatio(inlineSize, blockSize) {// inlineSizeが白銀比1:√2(1.414)の長辺かそれ以上か
@@ -135,9 +112,7 @@ name: 著者名
         const columnCount = this._.O.columnCount ? this._.O.columnCount : (1040 < inlineSize && this.#isOverSilverRatio(inlineSize, blockSize) ? 2 : 1);
 
         // サイズはそのままで余白にする。そしてその余白部分にオーバーレイする
-//        H -= (1===columnCount ? 16 : 0); // -16はfooter
         Css.set('--page-padding-bottom', `${1===columnCount ? 16 : 0}px`);
-        
 
         inlineSize = this.#isVertical ? H : W;
         blockSize = this.#isVertical ? W : H;
@@ -172,6 +147,7 @@ name: 著者名
         }
     }
     async #setup() {
+        this._.O.viewer.style.display = 'block';
         const calc = this.#setSize();
         console.log('calc:', calc);
 

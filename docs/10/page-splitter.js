@@ -21,9 +21,15 @@ class PageSplitter {
     get finished() {return 'one'===this._.name ? this.#splitter.finished : this._.allFinished;}
 //    get elapsedMs {return this._.elapsedMs}
     async split(viewer) {
+        viewer.style.display = 'block';
         //const book = this._.O.viewer.querySelector(`[name="book-in-pages"]`);
         //const book = document.querySelector(`[name="book-in-pages"]`);
         const book = viewer.querySelector(`[name="book-in-pages"]`);
+
+        if (null!==this._.interval) { clearInterval(this._.interval); this._.interval=null; }// 完了する前に戻って再びページ生成されても前回のタイマーを削除する
+        for (let t of this._.types.values()) {t.init();}
+//        this.#splitter.init();
+
         // 表紙
         if (viewer.querySelector('.cover')) {viewer.querySelector('.cover').remove();}
         book.prepend(this.#splitter.makeCover());
@@ -66,6 +72,7 @@ class PageSplitter {
             Dom.q('[name="loading"]').style.display = 'none';
             this._.allCalculating = false;
             this._.allFinished = true;
+            this._.footer.allPageLoaded = true;
             /*
             // ノンブルを表示する（未実装）
             this._.footer.title = this._.parser.meta.javel.title;
@@ -75,11 +82,12 @@ class PageSplitter {
             this._.loading.hide();
             */
         } else if ('one'===this._.name){
+            console.log(Dom.q(`[name="book"]`).style.display, Dom.q(`[name="book-in-pages"]`).style.display);
             // 最初
             //book.append(...this._.splitter.make(this._.O.viewer, this._.parser.body.manuscript));
             book.append(...this.#splitter.make(viewer, this._.parser.body.manuscript));
 
-            if (null!==this._.interval) { clearInterval(this._.interval); }// 完了する前に戻って再びページ生成されても前回のタイマーを削除する
+//            if (null!==this._.interval) { clearInterval(this._.interval); this._.interval=null; }// 完了する前に戻って再びページ生成されても前回のタイマーを削除する
             // これ以降のページは指定時間毎に自動生成する
             this._.interval = setInterval(()=>{
                 this.#nowPage.scrollIntoView({behavior:'instant'}); // 元ページに戻す。これがないとなぜか空ページ表示される。
@@ -165,6 +173,7 @@ class AllPageSplitter {
         this._.pages = [];
     }
     get pages() {return this._.pages}
+    init() {}
     async *generateAsync(viewer=document.body) {
         console.debug('generateAsync() start');
         this._.dummy.show();
@@ -753,11 +762,17 @@ class Page {
         if (Type.isEl(root)) {
             if (!Dom.q('.dummy')) {
                 root.prepend(this.el); // visibility
-//                this.show();
-//                console.warn('要素は同一か：', Dom.q('.dummy')===this._.el);
-//                console.warn('要素は同一か：', this.el===this._.el);
-//                console.warn('要素はshowか：', Dom.q('.dummy').classList.contains('show'));
-            }
+            } else {this._.el = Dom.q('.dummy');}
+            this.show();
+            /*
+            console.log(this._.el.parentElement);
+            console.assert('none'!==this._.el.parentElement.style.display);
+            console.assert('none'!==this._.el.parentElement.parentElement.style.display);
+            console.assert('none'!==this._.el.parentElement.parentElement.parentElement.style.display);
+            console.warn('要素は同一か：', Dom.q('.dummy')===this._.el);
+            console.warn('要素は同一か：', this.el===this._.el);
+            console.warn('要素はshowか：', Dom.q('.dummy').classList.contains('show'));
+            */
             this._.r = this.el.getBoundingClientRect(); 
 //                console.log('this._.r:', this._.r);
             this._.b = Css.getFloat(`--page-block-size`);
@@ -778,7 +793,7 @@ class Page {
         if (null===this._.el.lastElementChild) {return false}
         const r = this._.el.lastElementChild.getBoundingClientRect();
         const res = this.isVertical ? this._.r.height < (r.bottom - this._.r.top) : this._.r.width < r.right
-//        console.warn('lastEl:', this._.el.lastElementChild);
+        console.warn('lastEl:', this._.el.lastElementChild);
         console.debug('without():', res, 'isV:', this.isVertical, 'this.H:', this._.r.height, '(bottom-top):', (r.bottom - this._.r.top), 'bottom:', r.bottom, 'this.top:', this._.r.top);
         return res;
     }
