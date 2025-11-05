@@ -49,6 +49,7 @@
   <script src="color-scheme.js"></script>
   <script src="install-button.js"></script>
   <script src="app-header.js"></script>
+  <script src="digital-clock.js"></script>
   <script src="file-opener.js"></script>
   <script src="page-loading-dialog.js"></script>
   <script src="page-footer.js"></script>
@@ -79,10 +80,25 @@
 
 <div name="overlay" style="display:none; pointer-events:none; position:fixed; top:0; left:0; width:100%;  height:100%; z-index:999; display:flex; justify-content:center; align-items:center;'"></div>
 <header name="appHeader">
-    <div style="display:flex;justify-content:flex-start;gap:1em;align-items:center;padding:0;margin:0;">
+    <!--<div name="appSummary" style="display:flex;justify-content:flex-start;gap:1em;align-items:center;padding:0;margin:0;">-->
+    <!--<div name="appSummary" style="display:flex;justify-content:flex-start;gap:1em;align-items:flex-end;padding:0;margin:0;">-->
+    <div name="appSummary" style="display:flex;flex-direction:row;justify-content:flex-start;gap:0.5em;align-items:flex-start;padding:0;margin:0;">
+        <!--
         <h1 name="app-name" tabindex="0" style="cursor:pointer;padding:0;margin:0;">Javel Viewer</h1>
+        <div name="app-name" tabindex="0" style="display:flex;justify-content:flex-start;gap:0.5em;align-items:center;padding:0;margin:0;cursor:pointer;">
+        -->
+        <!--
+        <h1 name="app-name-main" style="padding:0;margin:0;align-items:flex-end;">Javel</h1>
+        <h2 name="app-name-type" style="padding:0;margin:0;font-size:1em;font-weight:normal;">Previewer</h2>
+        -->
+        <div name="app-name" tabindex="0" style="display:flex;justify-content:flex-start;gap:0.5em;align-items:flex-start;padding:0;margin:0;cursor:pointer;">
+            <h1 name="app-name-main" style="padding:0;margin:0;align-items:flex-end;line-heigth:1em;letter-spacing:0;">Javel</h1>
+            <h2 name="app-name-type" style="padding:0;margin:0;font-size:1em;font-weight:normal;line-heigth:1em;letter-spacing:0;">Previewer</h2>
+        </div>
+        <!--
+        -->
         <div>
-            <div><p name="app-catch" tabindex="0" style="cursor:pointer;padding:0;margin:0;">テキストを小説にするアプリ</p></div>
+            <div><p name="app-catch" tabindex="0" style="cursor:pointer;padding:0;margin:0;line-heigth:1em;letter-spacing:0;">テキストを小説にするアプリ</p></div>
             <hr class="separator">
             <div name="app-status" style="display:none;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;list-style:none;">
                 <div class="tip-card">PWA</div>
@@ -93,6 +109,7 @@
         </div>
         <a href="" target="_blank" rel="noopener noreferer" target="github"><i><svg width="2em" height="2em" viewBox="0 0 512 512"><use href="#icon-github"></use></svg></i></a>
         <!-- ここにライト／ダークボタンが動的追加される -->
+        <!-- ここに時計が動的追加される -->
     </div>
     <div name="aboutScreen">
         <div name="app-feature" style="display:none;padding:0; margin:0; line-height:1.5em;">

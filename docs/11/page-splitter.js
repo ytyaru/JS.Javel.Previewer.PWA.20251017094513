@@ -62,10 +62,10 @@ class PageSplitter {
                     clearInterval(this._.interval);
                     this._.interval = null;
                     this._.footer.allPageLoaded = true;
-                    console.warn('ページ読み込みが完了した！！！！！！！！！！！！');
+//                    console.warn('ページ読み込みが完了した！！！！！！！！！！！！');
                 }
                 this._.footer.allPage = this.#splitter.pages.length;
-                console.warn('this._.footer.allPage:', this._.footer.allPage, this.#splitter.pages);
+//                console.warn('this._.footer.allPage:', this._.footer.allPage, this.#splitter.pages);
                 this.#nowPage.scrollIntoView({behavior:'instant'}); // 元ページに戻す。これがないとなぜか空ページ表示される。
             }, this._.intervalSec*1000);
         }
@@ -381,7 +381,8 @@ class OnePageSplitter {
         this._.tbs = null;
     }
     make(viewer, text=null) {// 一ページだけ生成して終了する（TextBlockの生成までは一括で全部行う？）
-        if (!text && this._.finished) {console.warn('完了済みだからmake()しない。');return []}
+        //if (!text && this._.finished) {console.warn('完了済みだからmake()しない。');return []}
+        if (!text && this._.finished) {return []}
         this._.calculating = true;
         this._.dummy.show();
         this._.dummy.addTo(viewer);
@@ -393,9 +394,9 @@ class OnePageSplitter {
             console.log('OnePageSplitter.make() block:', block, this._.blocks.length, this._.blocks);
             const [el, inlines] = this._.hp.toElBl(block, this._.continue.bi); // TextBlockをHTML要素に変換する
             this._.dummy.el.appendChild(el); // ブロック要素単位（h, p）
-            console.warn('this._.dummy.el.rect:', this._.dummy.el.getBoundingClientRect());
-            console.warn('this._.dummy.el.rect:', this._.dummy.el.getBoundingClientRect());
-            console.warn('el.rect:', el.getBoundingClientRect());
+//            console.warn('this._.dummy.el.rect:', this._.dummy.el.getBoundingClientRect());
+//            console.warn('this._.dummy.el.rect:', this._.dummy.el.getBoundingClientRect());
+//            console.warn('el.rect:', el.getBoundingClientRect());
             if (this._.dummy.without) {
                 const EL = el.cloneNode(true);
                 this._.dummy.el.removeChild(el); // なぜかDOMから削除されるだけでなく要素ごと消えてしまう！のでcloneNode(true)でコピーする。
@@ -659,8 +660,8 @@ class Page {
     constructor() {this._ = {}; this._.el = Dom.tags.div({class:'page'}); this._.writingMode=Css.get('--writing-mode');}
     get el() {return this._.el}
     addTo(root=document.body) {
-        console.warn('ダミーは存在するか：', Dom.qs('.dummy').length);
-        console.warn('Type.isEl(root)：', Type.isEl(root));
+//        console.warn('ダミーは存在するか：', Dom.qs('.dummy').length);
+//        console.warn('Type.isEl(root)：', Type.isEl(root));
         if (Type.isEl(root)) {
             if (!Dom.q('.dummy')) {root.prepend(this.el);} // visibility
             else {this._.el = Dom.q('.dummy');}
@@ -683,7 +684,7 @@ class Page {
         if (null===this._.el.lastElementChild) {return false}
         const r = this._.el.lastElementChild.getBoundingClientRect();
         const res = this.isVertical ? this._.r.height < (r.bottom - this._.r.top) : this._.r.width < r.right
-        console.warn('lastEl:', this._.el.lastElementChild);
+//        console.warn('lastEl:', this._.el.lastElementChild);
         console.debug('without():', res, 'isV:', this.isVertical, 'this.H:', this._.r.height, '(bottom-top):', (r.bottom - this._.r.top), 'bottom:', r.bottom, 'this.top:', this._.r.top);
         return res;
     }

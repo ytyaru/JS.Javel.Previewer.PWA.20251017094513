@@ -16,6 +16,13 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     viewer.showScrollbar();
     appHeader.hide();
     appHeader.resizeTextarea();
+    const clock = document.createElement('digital-clock');
+    clock.style.display = 'inline';
+    clock.style.gap = '0';
+    clock.style.padding = '0';
+    clock.style.margin = '0';
+    clock.style.fontFamily = 'monoscape';
+    Dom.q(`[name="appSummary"]`).appendChild(clock);
     Dom.q(`[name="view"]`).addEventListener('click', async(e) => {
         viewer.hideScrollbar();
         Dom.q(`[name="review"]`).style.display = 'inline';
@@ -53,8 +60,10 @@ window.addEventListener('DOMContentLoaded', async(event) => {
                 Dom.q(`[name="appHeader"]`).style.display = 'block';
                 Dom.q(`[name="input"]`).style.display = 'block';
                 Dom.q(`[name="review"]`).focus();
+                Dom.q('[name="appSummary"]').append(Dom.q('digital-clock'));
             },
         });
+        Dom.q('[name="footer"] > [name="first"]').prepend(Dom.q('digital-clock'));
         viewEl.focus();
     });
     Dom.q(`[name="review"]`).addEventListener('click', async(e) => {//再び開く
@@ -67,6 +76,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
         viewEl.focus();
         Dom.q(`.page.show:not(dummy)`).scrollIntoView({behavior:'smooth'});
         viewer._.footer.resetContent();
+        Dom.q('[name="footer"] > [name="first"]').prepend(Dom.q('digital-clock'));
     });
     Dom.q(`[name="review"]`).addEventListener('keydown', async(e) => {//再び開く
         console.log('keydown:', e.key)

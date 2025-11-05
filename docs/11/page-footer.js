@@ -2,17 +2,20 @@
 class PageFooter {
     constructor() {this._ = {el:null, setupedTimerSwitch:false, allPage:0, allPageLoaded:false};}
     make(viewer, calc, options={}) {
+        console.log('PageFooter.make() options:', options);
         this._.O = {...this.#defaultOptions, ...options};
+        console.log('PageFooter.make() this._.O:', this._.O);
         this._.viewer = viewer;
         this._.calc = calc;
         this._.el = this.#makeEl(viewer);
-        this._.timer = null;
+//        this._.timer = null;
         this.#place(viewer, calc);
+        console.log('PageFooter.make() this._.O:', this._.O);
         this.#setDisplay();
-        this.#updateTime();
-        this.#setupTimerSwitch();
-        this._.setupedTimerSwitch = true;
-        this.#timeIsShow();
+//        this.#updateTime();
+//        this.#setupTimerSwitch();
+//        this._.setupedTimerSwitch = true;
+//        this.#timeIsShow();
     }
     get el() {return this._.el}
     set title(v) {this._.title=v; this._.el.querySelector(`[name="title"]`).textContent = v}
@@ -38,7 +41,7 @@ class PageFooter {
     get remain() {return this._.allPage - this._.nowPage}
     hide() {this._.el.style.visibility = 'hidden';}
     show() {this._.el.style.visibility = 'visible';}
-    #timeIsShow() {this._.el.querySelector('[name="time"]').style.display = `${this.#isFullScreen && this._.O.isShowTime ? 'block' : 'none'}`}
+//    #timeIsShow() {this._.el.querySelector('[name="time"]').style.display = `${this.#isFullScreen && this._.O.isShowTime ? 'block' : 'none'}`}
     resetContent() {// ページ遷移時に現在ページ数と章タイトルを変更する
         const page = this._.viewer.querySelector('.page.show:not(dummy)');
         this._.el.style.visibility = (page.classList.contains('spread')) ? 'hidden' : 'visible';//見開きページならフッタ非表示
@@ -102,11 +105,13 @@ class PageFooter {
         else {
             const f = Dom.tags.div({name:'footer', style:'visibility:hidden;display:flex;justify-content:space-between;padding:0;margin:0;box-sizing:border-box;font-family:monoscape;font-size:16px;line-height:1em;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'},
                 Dom.tags.div({name:'first', style:'display:flex;gap:1em;inline-size:33.33%;margin-inline-start:0;box-sizing:border-box;'}, 
+                    /*
                     Dom.tags.div({name:'time', style:`gap:0em;display:${this.#isFullScreen && this._.O.isShowTime ? 'block' : 'none'}`}, 
                         Dom.tags.span({name:'hours', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, '00'), 
                         Dom.tags.span({name:'colon', style:'text-orientation:mixed;'}, ':'), 
                         Dom.tags.span({name:'minutes', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, '00'), 
                     ),
+                    */
                     Dom.tags.div({name:'subTitle', style:'box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, '章タイトル'),
                 ),
                 Dom.tags.div({name:'center', style:'inline-size:33.33%;margin:auto;box-sizing:border-box;text-align:center;display:flex;justify-content:center;'}, 
@@ -163,7 +168,11 @@ class PageFooter {
         this._.el.style.zIndex = '10';
     }
     #setDisplay() {
-        this._.el.querySelector(`[name="time"]`).style.display = this._.O.isShowTime ? 'block' : 'none';
+        console.log('PageFooter.#setDisplay(): this._.O:', this._.O);
+        document.querySelector(`digital-clock`).hidden = !this._.O.isShowTime;
+        console.log('PageFooter.#setDisplay():', !this._.O.isShowTime, Dom.q('[name="isShowTime"]').checked, document.querySelector(`digital-clock`).hidden, document.querySelector(`digital-clock`).style.contentVisibility, [...document.querySelectorAll(`digital-clock`)].length);
+//        if (this._.el.querySelector(`digital-clock`)) {this._.el.querySelector(`digital-clock`).hidden = !this._.O.isShowTime;}
+//        this._.el.querySelector(`[name="time"]`).style.display = this._.O.isShowTime ? 'block' : 'none';
         this._.el.querySelector(`[name="subTitle"]`).style.display = this._.O.isShowSubTitle ? 'block' : 'none';
         this._.el.querySelector(`[name="title"]`).style.display = this._.O.isShowTitle ? 'block' : 'none';
         this._.el.querySelector(`[name="nowPage"]`).style.display = this._.O.isShowNowPage ? 'inline' : 'none';
@@ -172,6 +181,7 @@ class PageFooter {
         this._.el.querySelector(`[name="remainArea"]`).style.display = this._.O.isShowRemain ? 'flex' : 'none';
         this._.el.querySelector(`[name="percent"]`).style.display = this._.O.isShowPercent ? 'flex' : 'none';
     }
+    /*
     #setNowTime() {
         const now = new Date();
         const H = this._.el.querySelector(`[name="hours"]`);
@@ -189,6 +199,7 @@ class PageFooter {
         window.addEventListener('focusin', (e)=>{this.#setNowTime(); this.#createTimer();});// 他のウインドウに遷移したときは発火する。最小化したりタブ遷移した時も！
         window.addEventListener('focusout', (e)=>{this.#removeTimer();});// 他のウインドウに遷移したときは発火する。最小化したりタブ遷移した時も！
     }
+    */
 }
 window.PageFooter = PageFooter;
 })();
