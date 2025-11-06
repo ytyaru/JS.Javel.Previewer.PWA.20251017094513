@@ -51,6 +51,7 @@ class ColorScheme {
 //        Dom.q(`[name="icon-dark"]`).style.display = 'inline' : 'none';
         Object.keys(this._.scheme[N].a).map(v=>Css.set(`--a-${v}`, this._.scheme[N].a[v]));
         Object.keys(this._.scheme[N].selection).map(v=>Css.set(`--selection-${v}`, this._.scheme[N].selection[v]));
+        Css.set('--loading-color', this._.scheme[N]['fg']);
     }
     #listen() {
         this._.el.addEventListener('click', async(e)=>{this.toggle();});

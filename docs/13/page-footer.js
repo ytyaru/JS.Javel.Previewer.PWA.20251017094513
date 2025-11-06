@@ -8,14 +8,9 @@ class PageFooter {
         this._.viewer = viewer;
         this._.calc = calc;
         this._.el = this.#makeEl(viewer);
-//        this._.timer = null;
         this.#place(viewer, calc);
         console.log('PageFooter.make() this._.O:', this._.O);
         this.#setDisplay();
-//        this.#updateTime();
-//        this.#setupTimerSwitch();
-//        this._.setupedTimerSwitch = true;
-//        this.#timeIsShow();
     }
     get el() {return this._.el}
     set title(v) {this._.title=v; this._.el.querySelector(`[name="title"]`).textContent = v}
@@ -31,21 +26,19 @@ class PageFooter {
             }
         }
     }
-    //set allPageLoaded(v) {this._.allPageLoaded=!!v; if(this._.el){this._.el.querySelector(`[name="allPageLoaded"]`).style.display=(!!v ? 'none' : 'inline');}}
-    set allPageLoaded(v) {
-        this._.allPageLoaded=!!v; 
-//        if(this._.el){this._.el.querySelector(`[name="allPageLoaded"]`).style.display=(!!v ? 'none' : 'inline');}
-//        if(this._.el){this._.el.querySelector(`[name="allPageLoaded"]`).style.display=(!!v ? 'none' : 'inline'); this.#updateLoader();}
-        if(this._.el){this.#updateLoader();}
-    }
+    set allPageLoaded(v) {this._.allPageLoaded=!!v; if(this._.el){this.#updateLoader();}}
     #updateLoader() {
+        const S = this._.el.querySelector(`[name="loading"]`).style;
         if (this._.allPageLoaded) {
-            this._.el.querySelector(`[name="loading"]`).style.display = 'none';
-            this._.el.querySelector(`[name="loading"]`).style.contentVisibility = 'hidden';
+            S.display = 'none';
+            S.contentVisibility = 'hidden';
         } else {
-            this._.el.querySelector(`[name="loading"]`).style.display = 'block';
-            this._.el.querySelector(`[name="loading"]`).style.contentVisibility = 'auto';
+            S.display = 'block';
+            S.contentVisibility = 'auto';
         }
+        /*
+        */
+        this._.el.querySelector(`loading-icon`).hidden = this._.allPageLoaded;
     }
     get title() {return this._.title}
     get subTitle() {return this._.subTitle}
@@ -56,7 +49,6 @@ class PageFooter {
     get remain() {return this._.allPage - this._.nowPage}
     hide() {this._.el.style.visibility = 'hidden';}
     show() {this._.el.style.visibility = 'visible';}
-//    #timeIsShow() {this._.el.querySelector('[name="time"]').style.display = `${this.#isFullScreen && this._.O.isShowTime ? 'block' : 'none'}`}
     resetContent() {// ページ遷移時に現在ページ数と章タイトルを変更する
         const page = this._.viewer.querySelector('.page.show:not(dummy)');
         this._.el.style.visibility = (page.classList.contains('spread')) ? 'hidden' : 'visible';//見開きページならフッタ非表示
@@ -118,33 +110,29 @@ class PageFooter {
         const footer = Dom.q(`[name="overlay"]`).querySelector(`[name="footer"]`);
         if (footer) {this.hide(); return footer;}
         else {
+            const loading = document.createElement('loading-icon');
             const f = Dom.tags.div({name:'footer', style:'visibility:hidden;display:flex;justify-content:space-between;padding:0;margin:0;box-sizing:border-box;font-family:monoscape;font-size:16px;line-height:1em;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'},
                 Dom.tags.div({name:'first', style:'display:flex;gap:1em;inline-size:33.33%;margin-inline-start:0;box-sizing:border-box;'}, 
-                    /*
-                    Dom.tags.div({name:'time', style:`gap:0em;display:${this.#isFullScreen && this._.O.isShowTime ? 'block' : 'none'}`}, 
-                        Dom.tags.span({name:'hours', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, '00'), 
-                        Dom.tags.span({name:'colon', style:'text-orientation:mixed;'}, ':'), 
-                        Dom.tags.span({name:'minutes', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, '00'), 
-                    ),
-                    */
                     Dom.tags.div({name:'subTitle', style:'box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, '章タイトル'),
                 ),
+                //Dom.tags.div({name:'center', style:'inline-size:33.33%;margin:auto;box-sizing:border-box;text-align:center;display:flex;justify-content:center;'}, 
                 Dom.tags.div({name:'center', style:'inline-size:33.33%;margin:auto;box-sizing:border-box;text-align:center;display:flex;justify-content:center;'}, 
-                    //Dom.tags.div({name:'loading', class:'loading'}),
-                    //Dom.tags.div({name:'loading', class:'loading-box'}, Dom.tags.div({class:'loading-item'})),
-                    Dom.tags.div({name:'nombre', style:'display:flex;gap:1em;margin:auto;box-sizing:border-box;text-align:center;;justify-content:center;'}, 
+                    //Dom.tags.div({name:'nombre', style:'display:flex;gap:1em;margin:auto;box-sizing:border-box;text-align:center;;justify-content:center;'}, 
+                    Dom.tags.div({name:'nombre', style:'display:flex;gap:1em;margin:auto;box-sizing:border-box;text-align:center;justify-content:center;align-items:flex-start;'},
+                        // <loading-icon></loading-icon>
+                        loading,
+//                        Dom.tags.loadingIcon(),
                         Dom.tags.div({name:'loading', class:'loading-item'}),
                         Dom.tags.div({name:'nowAllPage', style:'display:flex;gap:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, 
                             Dom.tags.span({name:'nowPage'}, this.nowPage),
                             Dom.tags.span({name:'slash', style:'text-orientation:mixed;'}, '/'), 
                             Dom.tags.span({name:'allPage'}, this.allPage),
-//                            Dom.tags.span({name:'allPageLoaded'}, '?'), 
                         ),
                         Dom.tags.div({name:'remainArea', style:'display:flex;gap:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, 
-                            Dom.tags.span({name: 'remainUnit', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, 'あと'),
+                            Dom.tags.span({name: 'remainUnit', style:'display:inline;writing-mode:vertical-rl;text-combine-upright:all; line-height:1em;'}, 'あと'),
                             Dom.tags.span({name:'remain'}, this.remain),
                         ),
-                        Dom.tags.div({name:'percent', style:'display:flex;gap:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, 
+                        Dom.tags.div({name:'percent', style:'display:flex;gap:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; line-height:1em;'}, 
                             Dom.tags.span({name:'finished'}, '100'),
                             Dom.tags.span({name:'integer', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, '0'),
                             Dom.tags.span({name:'decimal', style:'writing-mode:vertical-rl;text-combine-upright:all;'}, '0'),
@@ -189,8 +177,6 @@ class PageFooter {
         console.log('PageFooter.#setDisplay(): this._.O:', this._.O);
         document.querySelector(`digital-clock`).hidden = !this._.O.isShowTime;
         console.log('PageFooter.#setDisplay():', !this._.O.isShowTime, Dom.q('[name="isShowTime"]').checked, document.querySelector(`digital-clock`).hidden, document.querySelector(`digital-clock`).style.contentVisibility, [...document.querySelectorAll(`digital-clock`)].length);
-//        if (this._.el.querySelector(`digital-clock`)) {this._.el.querySelector(`digital-clock`).hidden = !this._.O.isShowTime;}
-//        this._.el.querySelector(`[name="time"]`).style.display = this._.O.isShowTime ? 'block' : 'none';
         this._.el.querySelector(`[name="subTitle"]`).style.display = this._.O.isShowSubTitle ? 'block' : 'none';
         this._.el.querySelector(`[name="title"]`).style.display = this._.O.isShowTitle ? 'block' : 'none';
         this._.el.querySelector(`[name="nowPage"]`).style.display = this._.O.isShowNowPage ? 'inline' : 'none';
@@ -199,28 +185,7 @@ class PageFooter {
         this._.el.querySelector(`[name="remainArea"]`).style.display = this._.O.isShowRemain ? 'flex' : 'none';
         this._.el.querySelector(`[name="percent"]`).style.display = this._.O.isShowPercent ? 'flex' : 'none';
         this.#updateLoader();
-//        this._.el.querySelector(`[name="loading"]`).style.display = 'block';
-//        this._.el.querySelector(`[name="loading"]`).style.contentVisibility = 'auto';
     }
-    /*
-    #setNowTime() {
-        const now = new Date();
-        const H = this._.el.querySelector(`[name="hours"]`);
-        const M = this._.el.querySelector(`[name="minutes"]`);
-        const h = `${now.getHours()}`.padStart(2, '0');
-        const m = `${now.getMinutes()}`.padStart(2, '0');
-        if (m!==M.textContent) {H.textContent = h; M.textContent = m;}
-//        this._.el.querySelector(`[name="hours"]`).textContent = `${now.getHours()}`.padStart(2, '0');
-//        this._.el.querySelector(`[name="minutes"]`).textContent = `${now.getMinutes()}`.padStart(2, '0');
-    }
-    #createTimer() {if (!this._.timer && this.#isFullScreen && this._.O.isShowTime) {this._.timer = setInterval(this.#setNowTime.bind(this), 1000);}}
-    #removeTimer() {if (this._.timer && !(this.#isFullScreen && this._.O.isShowTime)) {clearInterval(this._.timer); this._.timer=null;}}
-    #updateTime() {this.#createTimer(); this.#removeTimer();}
-    #setupTimerSwitch() {// フォーカスの取得・喪失に合わせてタイマーON/OFF切替。focus/blurだとバブリングして複数回呼び出される。visibilitychangeだと他窓遷移時発火せず。
-        window.addEventListener('focusin', (e)=>{this.#setNowTime(); this.#createTimer();});// 他のウインドウに遷移したときは発火する。最小化したりタブ遷移した時も！
-        window.addEventListener('focusout', (e)=>{this.#removeTimer();});// 他のウインドウに遷移したときは発火する。最小化したりタブ遷移した時も！
-    }
-    */
 }
 window.PageFooter = PageFooter;
 })();

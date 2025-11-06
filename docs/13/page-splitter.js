@@ -63,6 +63,7 @@ class PageSplitter {
             this._.footer.allPageLoaded = true;
         }
         this._.footer.allPage = this._.opSplitter.pages.length;
+//        Dom.q('loading-icon').rate = this._.footer.rate;
         if (nowPage) {nowPage.scrollIntoView({behavior:'instant'});}// 元ページに戻す。これがないとなぜか空ページ表示される。
     }
     makeNextPage(nextPage, pagingDisabled) {

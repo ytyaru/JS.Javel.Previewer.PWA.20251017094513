@@ -14,8 +14,8 @@
   height: var(--loading-size);
   border-radius: 50%;
   display: inline-block;
-  border-top: calc(var(--loading-size) / 10) solid var(--loading-color);
-  border-right: calc(var(--loading-size) / 10) solid transparent;
+  border-top: calc(var(--loading-size) / 6) solid var(--loading-color);
+  border-right: calc(var(--loading-size) / 6) solid transparent;
   -webkit-animation: rotation 1s linear infinite;
           animation: rotation 1s linear infinite;
 }
