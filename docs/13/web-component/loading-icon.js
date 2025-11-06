@@ -22,7 +22,8 @@ class LoadingIcon extends HTMLElement {// 全画面時のみ時分HH:MMを表示
   --loading-color: #f00;
   --loading-size: 1em;
 }
-.loading-icon {
+:host {
+/*.loading-icon {*/
   width: var(--loading-size);
   height: var(--loading-size);
   border-radius: 50%;
