@@ -1,0 +1,32 @@
+<script>
+window.addEventListener('DOMContentLoaded', async(event) => {
+    // ボタン作成
+    const button = document.createElement('button');
+    button.textContent = 'APIによる全画面切替';
+    document.body.appendChild(button);
+    // クリックイベント
+    button.addEventListener('click', (e)=>{
+        toggleFullScreen();
+    });
+    // キーイベント
+    window.addEventListener('keydown', (e)=>{
+        if ('F11'===e.key) {e.preventDefault();}
+    });
+    window.addEventListener('keyup', (e)=>{
+        if ('F11'===e.key) {
+            e.preventDefault(); // デフォルト処理を抑制する  
+            toggleFullScreen(); // 全画面切替
+        }
+    });
+    // 全画面切替
+    function toggleFullScreen() {
+        if (document.fullscreenElement) { document.exitFullscreen();
+        } else {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+        }
+    }
+
+});
+</script>

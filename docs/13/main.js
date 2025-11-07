@@ -16,6 +16,8 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     viewer.showScrollbar();
     appHeader.hide();
     appHeader.resizeTextarea();
+    const fullscreenButton = document.createElement('fullscreen-button');
+    Dom.q(`[name="appSummary"]`).appendChild(fullscreenButton);
     const clock = document.createElement('digital-clock');
     clock.style.display = 'inline';
     clock.style.gap = '0';
@@ -93,10 +95,12 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     Dom.q(`[name="pageMakeMethod"]`).value = 'bulk';
     Dom.q(`[name="pageMakeMethod"]`).dispatchEvent(new Event('change'));
     Dom.q(`[name="fullscreen"]`).addEventListener('click', async(e) => {
-        if (screenfull.enabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement,{navigationUI:'hide'});}
+        //if (screenfull.enabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement,{navigationUI:'hide'});}
+        if (screenfull.isEnabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement,{navigationUI:'hide'});}
     });
     Dom.q(`[name="size"]`).addEventListener('input', async(e) => {
-        console.log('****************', e.target.value, e, screenfull.enabled);
+        //console.log('****************', e.target.value, e, screenfull.enabled);
+        console.log('****************', e.target.value, e, screenfull.isEnabled);
         const isW = 'window'===e.target.value;
         Dom.q(`[name="width"]`).value = isW ? document.body.clientWidth : screen.width;
         Dom.q(`[name="height"]`).value = isW ? document.documentElement.clientHeight : screen.height;
@@ -112,6 +116,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     Dom.q(`[name="size"]`).dispatchEvent(new Event('input'));
     Dom.q(`[name="isAutoTypography"]`).addEventListener('input', async(e) => {'size column whitespace'.split(' ').map(n=>Dom.q(`[name="${n}Field"]`).disabled=e.target.checked);});//おまかせ
     // 初期化
+    fullscreenButton.update();
     viewer.showScrollbar();
     Dom.q(`[name="fullscreen"]`).innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面';
     Dom.q(`[name="isAutoTypography"]`).dispatchEvent(new Event('input'));

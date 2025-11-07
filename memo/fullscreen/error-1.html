@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<body>
+<p>これは失敗例です。ボタンを押しても機能しません。</p>
+<script>
+window.addEventListener('DOMContentLoaded', async(event) => {
+// ボタン作成
+const button = document.createElement('button');
+button.textContent = 'APIによる全画面切替';
+document.body.appendChild(button);
+// クリックイベント
+button.addEventListener('click', (e)=>{
+    window.dispatchEvent(new KeyboardEvent({'key':'F11'}));
+});
+});
+</script>
+</body>
