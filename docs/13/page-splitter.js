@@ -36,8 +36,8 @@ class PageSplitter {
             let pages = null;
             while (0 < (pages = this._.opSplitter.make()).length) {
                 book.append(...pages);
-                //this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.rate);
-                this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.percent);
+                this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.rate);
+                //this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.percent);
                 await wait(0); // これがないとフリーズ状態になり進捗が表示されない！
             }
             this._.footer.allPageLoaded = true;

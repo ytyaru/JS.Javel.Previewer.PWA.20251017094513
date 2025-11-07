@@ -2,7 +2,7 @@
 class FullscreenButton extends HTMLElement {// 全画面ON/OFF切替（screenFullライブラリで管理し、F11キーイベント時もそうする）
     constructor() {
         super();
-        this._ = {root:null, timer:0, attrs:{hidden:{type:'boolean', value:false}}, listened:false};
+        this._ = {root:null, timer:0, attrs:{hidden:{type:'boolean', value:false}}, listened:false, keyDisabled:false, clickDisabled:false};
     }
     static get observedAttributes() {return ['hidden'];}
     connectedCallback() {
@@ -28,6 +28,9 @@ class FullscreenButton extends HTMLElement {// 全画面ON/OFF切替（screenFul
         if (!screenfull.isEnabled) {console.error('FullScreen API が未実装です！');}
         if (this._.root.querySelector('full')) {return}
         console.log(document.fullscreenEnabled, screenfull.isEnabled, screenfull.isEnabled, screenfull);
+        this._.root.innerHTML = '<style>:host {cursor:pointer;}</style>';
+//        this._.root.title = 'Fullscreen';
+        //this._.root.innerHTML = '<style>:host {cursor: pointer;} :host:hover{color:red;}</style>';
 //        if (this._.root.querySelector('button')) {return}
         const {svg, path} = Dom.tags('http://www.w3.org/2000/svg');
 //        const full = svg({name:'full', width:'512', height:'512', viewBox:'0 0 512 512', style:`display:${screenfull.isFullscreen ? 'inline' :'none'}`}, path({fill:'currentColor', d:'M329.142 512H512V329.142h-65.828v117.03H329.14Zm-146.284 0v-65.828H65.828V329.14H0V512ZM329.14 65.828h117.03V182.86H512V0H329.142ZM182.86 0v65.828H65.828V182.86H0V0Z'}));
@@ -47,8 +50,10 @@ class FullscreenButton extends HTMLElement {// 全画面ON/OFF切替（screenFul
     async #onClick(e) {
 //        window.dispatchEvent(new KeyboardEvent('keydown', {'key':'F11'}));
 //        window.dispatchEvent(new KeyboardEvent('keyup', {'key':'F11'}));
-        await screenfull.toggle(document.documentElement,{navigationUI:'hide'});
-        console.log('全画面化ボタンを押した！');
+        if (!this._.clickDisabled) {
+            await screenfull.toggle(document.documentElement,{navigationUI:'hide'});
+            console.log('全画面化ボタンを押した！');
+        }
     }
     get #fullIcon() {return this._.root.querySelector('[name="full"]')}
     get #existIcon() {return this._.root.querySelector('[name="exist"]')}
@@ -116,17 +121,19 @@ class FullscreenButton extends HTMLElement {// 全画面ON/OFF切替（screenFul
     async #onKeyDown(e) {
         if ('F11'===e.key){
             e.preventDefault();
-            console.log('F11 keydown e.preventDefault()');
-            await screenfull.toggle(document.documentElement,{navigationUI:'hide'});
+//            console.log('F11 keydown e.preventDefault()');
+//            await screenfull.toggle(document.documentElement,{navigationUI:'hide'});
 //            console.log('F11キーで全画面化ボタンを押した！:', screenfull.isFullscreen, e);
         }
     }
     async #onKeyUp(e) {
         if ('F11'===e.key) {
             e.preventDefault();
-//            await screenfull.toggle(e,{navigationUI:'hide'})
-            await screenfull.toggle(document.documentElement,{navigationUI:'hide'});
-            console.log('F11キーで全画面化ボタンを押した！:', screenfull.isFullscreen, e);
+            if (!this._.keyDisabled) {
+    //            await screenfull.toggle(e,{navigationUI:'hide'})
+                await screenfull.toggle(document.documentElement,{navigationUI:'hide'});
+                console.log('F11キーで全画面化ボタンを押した！:', screenfull.isFullscreen, e);
+            }
         }
         /*
         if ('F11'===e.key) {e.preventDefault();}
@@ -160,7 +167,8 @@ class FullscreenButton extends HTMLElement {// 全画面ON/OFF切替（screenFul
         window.addEventListener('resize', this.#onResize.bind(this));
         */
         //document.addEventListener('keyup', (e)=>{if ('F11'===e.key) {e.prevendDefault(); screenfull.toggle(e,{navigationUI:'hide'})}});
-        window.addEventListener('click', this.#onClick.bind(this));
+        //window.addEventListener('click', this.#onClick.bind(this));
+        this._.root.addEventListener('click', this.#onClick.bind(this));
 //        window.addEventListener('keydown', this.#onKeyDown.bind(this));
 //        window.addEventListener('keyup', this.#onKeyUp.bind(this));
         window.addEventListener('resize', this.#onResize.bind(this));
@@ -172,7 +180,8 @@ class FullscreenButton extends HTMLElement {// 全画面ON/OFF切替（screenFul
         //window.removeEventListener('focusin', this.#onFocusIn.bind(this));// 他のウインドウに遷移したときは発火する。最小化したりタブ遷移した時も！
         //window.removeEventListener('focusout', this.#onFocusOut.bind(this));// 他のウインドウに遷移したときは発火する。最小化したりタブ遷移した時も！
         //window.removeEventListener('resize', this.#onResize.bind(this));
-        window.removeEventListener('click', this.#onClick.bind(this));
+        //window.removeEventListener('click', this.#onClick.bind(this));
+        this._.root.removeEventListener('click', this.#onClick.bind(this));
 //        window.removeEventListener('keydown', this.#onKeyDown.bind(this));
 //        window.removeEventListener('keyup', this.#onKeyUp.bind(this));
         window.removeEventListener('resize', this.#onResize.bind(this));

@@ -94,10 +94,12 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     });
     Dom.q(`[name="pageMakeMethod"]`).value = 'bulk';
     Dom.q(`[name="pageMakeMethod"]`).dispatchEvent(new Event('change'));
+    /*
     Dom.q(`[name="fullscreen"]`).addEventListener('click', async(e) => {
         //if (screenfull.enabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement,{navigationUI:'hide'});}
         if (screenfull.isEnabled) {e.target.innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面'; screenfull.toggle(document.documentElement,{navigationUI:'hide'});}
     });
+    */
     Dom.q(`[name="size"]`).addEventListener('input', async(e) => {
         //console.log('****************', e.target.value, e, screenfull.enabled);
         console.log('****************', e.target.value, e, screenfull.isEnabled);
@@ -118,7 +120,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
     // 初期化
     fullscreenButton.update();
     viewer.showScrollbar();
-    Dom.q(`[name="fullscreen"]`).innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面';
+    //Dom.q(`[name="fullscreen"]`).innerHTML=screenfull.isFullscreen ? '非全画面' : '全画面';
     Dom.q(`[name="isAutoTypography"]`).dispatchEvent(new Event('input'));
     Dom.q(`[name="view"]`).focus();
 });

@@ -10,10 +10,10 @@ class PageLoadingDialog {// ページ一括生成時に表示するダイアロ�
     update(allPage, rate) {
         this._.page.all = allPage;
         this._.page.rate = rate;
-        this._.page.percent = percent;
+        this._.page.percent = rate*100;
         this.page.textContent = `${allPage}`;
 //        this.rate.textContent = `${rate}`;
-        this.percent.textContent = `${(rate*100).toFixed(100===percent ? 0 : 1)} %`;
+        this.percent.textContent = `${this._.page.percent.toFixed(100===this._.page.percent ? 0 : 1)} %`;
     }
     make() {
         if (!this.el) {
