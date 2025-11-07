@@ -16,44 +16,71 @@ class LoadingIcon extends HTMLElement {// 全画面時のみ時分HH:MMを表示
     }
     static get observedAttributes() {return ['hidden', 'color', 'size', 'rate', 'fig'];}
     connectedCallback() {
-        const shadow = this.attachShadow({ mode: 'closed' });
+        console.log('LoadingIcon.connectedCallback()');
+        const shadow = this.attachShadow({ mode: 'open' });
         shadow.innerHTML = `<style>
 :root {
   --loading-color: #f00;
   --loading-size: 1em;
 }
 :host {
-/*.loading-icon {*/
+  /*
+  width:100%;
+  height:100%;
+  */
+  font-size: 1em;
+  font-family: monoscape;
+  line-height: 1em;
+  letter-spacing: 0;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+  display: inline-block;
+  /*
+  */
+  /*
+  display: flex;
+  flex-direction: row;
+  align-items: flex-center;
+  */
+  display: flex;
+  content-visibility: hidden;
+}
+.icon {
   width: var(--loading-size);
   height: var(--loading-size);
   border-radius: 50%;
   display: inline-block;
   border-top: calc(var(--loading-size) / 6) solid var(--loading-color);
   border-right: calc(var(--loading-size) / 6) solid transparent;
-  -webkit-animation: loading-icon-rotation 1s linear infinite;
-          animation: loading-icon-rotation 1s linear infinite;
+  -webkit-animation: icon-rotation 1s linear infinite;
+          animation: icon-rotation 1s linear infinite;
 }
-.loading-percent {
-  font-family: monoscape;
-  font-size: 1em;
-  line-height: 1em;
-  letter-spacing: 0;
+/*.percent {display: inline-block; padding:0; margin:0; line-height:1em;}*/ /* なぜか画面下部に埋もれてしまう */
+/*.percent {padding:0; margin:0; line-height:1em;}*/ /* なぜか表示されなくなる */
+/*.percent {display: block; padding:0; margin:0; line-height:1em;}*/ /* なぜか表示されなくなる */
+/*.percent {padding:0; margin:0; line-height:1em;}*/
+.percent {display: none; padding:0; margin:0; line-height:1em;}
+.int, .dec {
+  /*writing-mode: vertical-rl;*/
+  text-orientation: upright;
+  text-combine-upright: all;
 }
-@-webkit-keyframes loading-icon-rotation {
+@-webkit-keyframes icon-rotation {
   0% {transform: rotate(0deg);}
   100% {transform: rotate(360deg);}
 }
-@keyframes loading-icon-rotation {
+@keyframes icon-rotation {
   0% {transform: rotate(0deg);}
   100% {transform: rotate(360deg);}
 }
 </style>`
         shadow.append(
-            Dom.tags.div({name:'loading-icon', class:'loading-icon'}),
-            Dom.tags.div({name:'loading-percent', class:'loading-percent'}, 
-                Dom.tags.span({name:'loading-percent-int', style:'writing-mode:vertical-rl; text-orientation:upright; text-combine-upright:all;'}, ''), // 整数部0〜100
-                Dom.tags.span({name:'loading-percent-dec', style:'writing-mode:vertical-rl; text-orientation:upright; text-combine-upright:all;'}, ''), // 少数部.0〜.9
-                Dom.tags.span({name:'loading-percent-sig'}, ''), // %
+            Dom.tags.div({name:'icon', class:'icon'}),
+            Dom.tags.div({name:'percent', class:'percent'},
+                Dom.tags.span({name:'int', class:'int'}, ''), // 整数部0〜100
+                Dom.tags.span({name:'dec', class:'dec'}, ''), // 少数部.0〜.9
+                Dom.tags.span({name:'sig', class:'sig'}, ''), // %
             ),
         );
         /*
@@ -68,6 +95,11 @@ class LoadingIcon extends HTMLElement {// 全画面時のみ時分HH:MMを表示
         */
         this.#updateDisplay(); 
     }
+    get #icon() {return this.shadowRoot.querySelector('[name="icon"]')}
+    get #percent() {return this.shadowRoot.querySelector('[name="percent"]')}
+    get #int() {return this.shadowRoot.querySelector('[name="int"]')}
+    get #dec() {return this.shadowRoot.querySelector('[name="dec"]')}
+    get #sig() {return this.shadowRoot.querySelector('[name="sig"]')}
     /*
     adoptedCallback() {
         const size = Css.get('font-size');
@@ -100,9 +132,11 @@ class LoadingIcon extends HTMLElement {// 全画面時のみ時分HH:MMを表示
         this.#updateDisplay();
         this.#setAttr('hidden', v);
     }
+    get hiddenPercent() {return 'none'===this.#percent.style.display;}
+    set hiddenPercent(v) {this.#percent.style.display = v ? 'none' : 'inline-block'; console.error('this.#percent.style.display:', this.#percent.style.display);}
     get color() {return this._.attrs.color.value}
     set color(v) {
-        if (!this.#validColor(v)) {throw new TypeError(`LoadingIcon.colorはCSS色値であるべきです。:${v}`');}
+        if (!this.#validColor(v)) {throw new TypeError(`LoadingIcon.colorはCSS色値であるべきです。:${v}`);}
         this._.attrs.color.value = v;
         Css.set('--loading-color', v);
         this.#setAttr('color', v);
@@ -134,11 +168,15 @@ class LoadingIcon extends HTMLElement {// 全画面時のみ時分HH:MMを表示
     }
     #resetPercent() {
         const R = this._.attrs.rate.value;
-        this._.attrs.percent.value = `${1===R ? '完' : (R*100).toFixed(this._.attrs.fig.value)}%`;
+        this._.attrs.percent.value = `${1===R ? '完' : (R*100).toFixed(this._.attrs.fig.value)}`;
         const parts = this._.attrs.percent.value.split('.');
-        Dom.q('[name="loading-percent-int"]').textContent = parts[0];
-        Dom.q('[name="loading-percent-dec"]').textContent = 1===parts.length ? '' : '.'+parts[1];
-        Dom.q('[name="loading-percent-sig"]').textContent = '%';
+        console.log(this, this.#int, this.#dec, this.#sig);
+        this.#int.textContent = parts[0];
+        this.#dec.textContent = 1===parts.length ? '' : '.'+parts[1];
+        this.#sig.textContent = '%';
+//        Dom.q('[name="loading-percent-int"]').textContent = parts[0];
+//        Dom.q('[name="loading-percent-dec"]').textContent = 1===parts.length ? '' : '.'+parts[1];
+//        Dom.q('[name="loading-percent-sig"]').textContent = '%';
     }
     #setAttr(k, v) {null===v || 'boolean'===this._.attrs[k].type && !this._.attrs[k].value ? this.removeAttribute(k) : this.setAttribute(k, 'bool'===this._.attrs[k].type ? '' : `${v}`);}
     #validColor(colorString) {// 色値の妥当性判定
@@ -151,7 +189,9 @@ class LoadingIcon extends HTMLElement {// 全画面時のみ時分HH:MMを表示
         s.fontSize = sizeString;
         return s.fontSize !== '';// 設定が失敗した（無効な値だった）場合、プロパティは空文字列になる
     }
-    #updateDisplay() { this.style.display = !this.hidden ? 'inline-block' : 'none'; }
+    //#updateDisplay() { this.style.display = !this.hidden ? 'inline-block' : 'none'; }
+    //#updateDisplay() { this.style.display = !this.hidden ? 'flex' : 'none'; }
+    #updateDisplay() { this.style.contentVisibility = this.hidden ? 'hidden' : 'visible'; }
 }
 customElements.define('loading-icon', LoadingIcon); // <loading-icon></loading-icon>
 })();

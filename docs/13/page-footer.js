@@ -1,6 +1,6 @@
 (function(){
 class PageFooter {
-    constructor() {this._ = {el:null, setupedTimerSwitch:false, allPage:0, allPageLoaded:false};}
+    constructor() {this._ = {el:null, setupedTimerSwitch:false, nowPage:0, allPage:0, allPageLoaded:false, loading:null};}
     make(viewer, calc, options={}) {
         console.log('PageFooter.make() options:', options);
         this._.O = {...this.#defaultOptions, ...options};
@@ -8,11 +8,13 @@ class PageFooter {
         this._.viewer = viewer;
         this._.calc = calc;
         this._.el = this.#makeEl(viewer);
+        this._.loading.hiddenPercent = !this._.O.isShowLoadingPercent;
         this.#place(viewer, calc);
         console.log('PageFooter.make() this._.O:', this._.O);
         this.#setDisplay();
     }
     get el() {return this._.el}
+    get loading() {return this._.loading}
     set title(v) {this._.title=v; this._.el.querySelector(`[name="title"]`).textContent = v}
     set subTitle(v) {this._.subTitle=v; this._.el.querySelector(`[name="subTitle"]`).textContent = v}
     set nowPage(v) {if(Number.isInteger(v)){this._.nowPage=v; if(this._.el){this._.el.querySelector(`[name="nowPage"]`).textContent = v;}}}
@@ -28,6 +30,7 @@ class PageFooter {
     }
     set allPageLoaded(v) {this._.allPageLoaded=!!v; if(this._.el){this.#updateLoader();}}
     #updateLoader() {
+        /*
         const S = this._.el.querySelector(`[name="loading"]`).style;
         if (this._.allPageLoaded) {
             S.display = 'none';
@@ -36,7 +39,6 @@ class PageFooter {
             S.display = 'block';
             S.contentVisibility = 'auto';
         }
-        /*
         */
         this._.el.querySelector(`loading-icon`).hidden = this._.allPageLoaded;
     }
@@ -81,6 +83,7 @@ class PageFooter {
             els.decimal.style.display = 'none';
             els.finished.style.display = 'inline';
         }
+//        this._.loading.rate = this.rate;
     }
     #updateSubTitle(page) {
         if (['cover', 'back-cover'].some(v=>page.classList.contains(v))) {return}
@@ -93,6 +96,7 @@ class PageFooter {
     }
     get #defaultOptions() { return {
         isShowTime: true, // 全画面時現在時刻表示是非
+        isShowLoadingPercent: true, //ページ分割時進捗率表示
         isShowSubTitle: true, // 章タイトル表示是非
         isShowTitle: true, // 作品タイトル表示是非
         isShowNowPage: true, // 現在ページ
@@ -110,7 +114,7 @@ class PageFooter {
         const footer = Dom.q(`[name="overlay"]`).querySelector(`[name="footer"]`);
         if (footer) {this.hide(); return footer;}
         else {
-            const loading = document.createElement('loading-icon');
+            this._.loading = document.createElement('loading-icon');
             const f = Dom.tags.div({name:'footer', style:'visibility:hidden;display:flex;justify-content:space-between;padding:0;margin:0;box-sizing:border-box;font-family:monoscape;font-size:16px;line-height:1em;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'},
                 Dom.tags.div({name:'first', style:'display:flex;gap:1em;inline-size:33.33%;margin-inline-start:0;box-sizing:border-box;'}, 
                     Dom.tags.div({name:'subTitle', style:'box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, '章タイトル'),
@@ -120,9 +124,9 @@ class PageFooter {
                     //Dom.tags.div({name:'nombre', style:'display:flex;gap:1em;margin:auto;box-sizing:border-box;text-align:center;;justify-content:center;'}, 
                     Dom.tags.div({name:'nombre', style:'display:flex;gap:1em;margin:auto;box-sizing:border-box;text-align:center;justify-content:center;align-items:flex-start;'},
                         // <loading-icon></loading-icon>
-                        loading,
+                        this._.loading,
 //                        Dom.tags.loadingIcon(),
-                        Dom.tags.div({name:'loading', class:'loading-item'}),
+//                        Dom.tags.div({name:'loading', class:'loading-item'}),
                         Dom.tags.div({name:'nowAllPage', style:'display:flex;gap:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'}, 
                             Dom.tags.span({name:'nowPage'}, this.nowPage),
                             Dom.tags.span({name:'slash', style:'text-orientation:mixed;'}, '/'), 

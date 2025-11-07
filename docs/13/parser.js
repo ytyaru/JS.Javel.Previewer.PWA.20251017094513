@@ -265,17 +265,22 @@ class JavelMeta {// https://github.com/nodeca/js-yaml 依存
     }
 }
 class Progress {
-    constructor(all=0) {this._ = {rate:0, now:0, all:0}; this.clear(all);}
+    constructor(all=0) {this._ = {rate:0, percent:0, now:0, all:0}; this.clear(all);}
     get rate() {return this._.rate}
+    get percent() {return this._.percent}
     get now() {return this._.now}
     set now(v) {if (Type.isNum(v)) {this._.now = v; this.#calc();}}
     get all() {return this._.all}
     set all(v) {if (Type.isNum(v)) {this._.all = v; this.clear(v);}}
     clear(all=0) {this._.all = all; this._.now = 0; this._.rate = 0;}
     #calc() {
-        this._.rate = (this._.now / this._.all) * 100;
-        if (100 < this._.rate) {this._.rate=100}
-        console.debug(this._.rate, '% *******************************', this._.now , this._.all);
+        //this._.rate = (this._.now / this._.all) * 100;
+//        if (100 < this._.rate) {this._.rate=100}
+//        console.debug(this._.rate, '% *******************************', this._.now , this._.all);
+        this._.rate = (this._.now / this._.all);
+        if (1 < this._.rate) {this._.rate=1}
+        this._.percent = this._.rate * 100;
+        console.debug(this._.percent, '%', this._.rate, this._.now , this._.all);
     }
 }
 class JavelBody {

@@ -36,7 +36,8 @@ class PageSplitter {
             let pages = null;
             while (0 < (pages = this._.opSplitter.make()).length) {
                 book.append(...pages);
-                this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.rate);
+                //this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.rate);
+                this._.loading.update(this._.opSplitter.pages.length, this._.parser.body.progress.percent);
                 await wait(0); // これがないとフリーズ状態になり進捗が表示されない！
             }
             this._.footer.allPageLoaded = true;
@@ -64,6 +65,7 @@ class PageSplitter {
         }
         this._.footer.allPage = this._.opSplitter.pages.length;
 //        Dom.q('loading-icon').rate = this._.footer.rate;
+        this._.footer.loading.rate = this._.parser.body.progress.rate;
         if (nowPage) {nowPage.scrollIntoView({behavior:'instant'});}// 元ページに戻す。これがないとなぜか空ページ表示される。
     }
     makeNextPage(nextPage, pagingDisabled) {

@@ -45,6 +45,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
             letterSpacing: Number(Dom.q(`[name="letterSpacing"]`).value),
             footer: {
                 isShowTime: Dom.q(`[name="isShowTime"]`).checked, // 全画面化時現在時刻表示是非
+                isShowLoadingPercent: Dom.q(`[name="isShowLoadingPercent"]`).checked, // ページ分割時進捗率表示
                 isShowSubTitle: Dom.q(`[name="isShowSubTitle"]`).checked, // 章タイトル表示是非
                 isShowTitle: Dom.q(`[name="isShowTitle"]`).checked, // 作品タイトル表示是非
                 isShowNowPage: Dom.q(`[name="isShowNowPage"]`).checked,
