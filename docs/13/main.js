@@ -104,8 +104,14 @@ window.addEventListener('DOMContentLoaded', async(event) => {
         //console.log('****************', e.target.value, e, screenfull.enabled);
         console.log('****************', e.target.value, e, screenfull.isEnabled);
         const isW = 'window'===e.target.value;
-        Dom.q(`[name="width"]`).value = isW ? document.body.clientWidth : screen.width;
-        Dom.q(`[name="height"]`).value = isW ? document.documentElement.clientHeight : screen.height;
+//        Dom.q(`[name="width"]`).value = isW ? document.body.clientWidth : screen.width;
+//        Dom.q(`[name="height"]`).value = isW ? document.documentElement.clientHeight : screen.height;
+        Dom.q(`[name="width"]`).disabled = isW;
+        Dom.q(`[name="height"]`).disabled = isW;
+        if ('window'===e.target.value) {
+            Dom.q(`[name="width"]`).value = screen.width;
+            Dom.q(`[name="height"]`).value = screen.height;
+        } else {Dom.q(`[name="width"]`).focus();}
     });
     window.addEventListener('resize', async(event) => {
         if ('window'===Dom.q(`[name="size"]`).value) {
