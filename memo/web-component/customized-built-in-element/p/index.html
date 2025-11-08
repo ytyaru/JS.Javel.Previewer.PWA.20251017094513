@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>カスタム組込要素</title>
+    <script src="my-element.js" defer></script>
+</head>
+<body>
+    <h1>p要素のカスタム組込でもattachShadow不能</h1>
+    <p>　<a href="https://developer.mozilla.org/ja/docs/Web/API/Element/attachShadow#%E3%82%B7%E3%83%A3%E3%83%89%E3%82%A6%E3%83%84%E3%83%AA%E3%83%BC%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%A7%E3%81%8D%E3%82%8B%E8%A6%81%E7%B4%A0" target="_blank" rel="noopner norefeler">シャドウツリーを追加できる要素</a>によると、p要素はattachShadow()できるはずです。なのにエラーが出ました。おそらくカスタム組込要素の場合はエラーになり、自律カスタム要素なら成功するのでしょう。</p>
+    <p>　デベロッパツールに表示されているエラーを確認してください。</p>
+    <p>　</p>
+    <pre is="my-element" myattr="属性値さ">
+要素だっちゃ。
+改行コードは消えるっちゃ。
+でもpre要素内なら残るっちゃ。
+    </pre>
+</body>
+</html>
